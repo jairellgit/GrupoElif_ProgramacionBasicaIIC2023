@@ -1,0 +1,2 @@
+# Ignora la carpeta pycache generada por python
+__pycache__
