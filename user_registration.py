@@ -81,36 +81,29 @@ def getUserPin():
 
 
 # >>> Depositar el dinero
-# Controlar número de intentos del depósito
-def validateDepositAttempts():
-    totalDepositValidAttempts = 3
-    global depositAttempts
-    depositAttempts += 1
-
-    if (depositAttempts == totalDepositValidAttempts):
-        print(f"\nHa excedido el máximo de {totalDepositValidAttempts} intentos para realizar el depósito, volviendo al menú principal...")
-        from index import start
-        start()
-    else:
-        getDeposit()
-
-
 def getDeposit():
-    global minMoney # Variable para almacenar el monto mínimo requerido de deposito
+    global minMoney 
     minMoney = 10000 # Monto temporal - Se configurará correctamente cuando estén los archivos de configuración avanzada
-    try:
-        depositMoney = float(input(f"Ingrese el monto a depositar (mínimo ${minMoney}): \n> "))
-        if(depositMoney >= minMoney):
-            # Pendiente: Cuando estén los archivos, almacenar el monto ingresado a la cuenta del usuario respectivo
-            print("Deposito realizado con éxito. Registro de usuario culminado.")
-            # Punto 5 pendiente acá, usar las variables globales y el depositMoney para guardar los datos del usuario.
-            # Punto 6 (Salir)
-        else: 
-            validateDepositAttempts()
-            print(">>> El monto ingresado no es válido, debe ser mínimo $"+str(minMoney)+". Le quedan "+str(depositAttempts)+" intentos.") 
-    except ValueError:
-        print(">>> Ingrese solo números.")
-        
+    depositAttempts = 0
+    while depositAttempts != 3:
+        try:
+            depositMoney = float(input(f"Ingrese el monto a depositar (mínimo ${minMoney}): \n> "))
+            if(depositMoney >= minMoney):
+                print("Deposito realizado con éxito. ¡Registro de usuario completado!")
+                # Punto 5 pendiente acá, usar las variables globales y el depositMoney para guardar los datos del usuario.
+                # Punto 6 (Salir al menú principal)
+            else: 
+                totalDepositValidAttempts = 3
+                depositAttempts += 1
+
+                if (depositAttempts == totalDepositValidAttempts):
+                    print(f"\nHa excedido el máximo de {totalDepositValidAttempts} intentos para realizar el depósito, volviendo al menú principal...")
+                else:
+                    attemptsLeft = 3 - depositAttempts
+                    print(">>> El monto ingresado no es válido, debe ser mínimo $"+str(minMoney)+". Le quedan "+str(attemptsLeft)+" intentos.") 
+        except ValueError:
+            print(">>> Ingrese solo números.")
+
 
 def addRegistration():
     print("\n♦ Registro de nuevo usuario")
