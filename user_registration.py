@@ -50,7 +50,7 @@ def getUserId():
 def createPIN():
     while True:
         try:
-            userPin = int(getpass.getpass("Digite su PIN (debe contener al menos 6 dígitos): "))
+            userPin = str(getpass.getpass("Digite su PIN (debe contener al menos 6 dígitos): "))
             if len(userPin) >= 6:
                 return userPin
             else:
