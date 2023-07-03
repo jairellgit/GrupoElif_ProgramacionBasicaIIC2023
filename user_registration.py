@@ -85,7 +85,8 @@ def getDeposit():
     global minMoney 
     minMoney = 10000 # Monto temporal - Se configurará correctamente cuando estén los archivos de configuración avanzada
     depositAttempts = 0
-    while depositAttempts != 3:
+    depositMoney = 0
+    while (depositAttempts != 3) and (depositMoney < minMoney):
         try:
             depositMoney = float(input(f"Ingrese el monto a depositar (mínimo ${minMoney}): \n> "))
             if(depositMoney >= minMoney):
