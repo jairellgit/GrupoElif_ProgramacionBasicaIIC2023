@@ -1,3 +1,6 @@
+import getpass
+
+
 userIdAttempts = 0
 
 
@@ -16,13 +19,14 @@ def validateUserIdAttempts():
     else:
         addRegistration()
 
+
 # def isUserExists(userId):
     # Esta función booleana valida si un usuario existe o no
 
 
 def isValidUserId(userId):
-    MIN_USERID_LENGHT = 5
-    return len(userId) >= MIN_USERID_LENGHT
+    minUserIdLenght = 5
+    return len(userId) >= minUserIdLenght
 
 
 def validateUserId(userId):
@@ -32,20 +36,90 @@ def validateUserId(userId):
         #  return validateUserIdAttempts()
         return userId
 
-    print("\nId de usuario inválido, mínimo cinco caracteres...")
+    print("\n>>> ID de usuario inválido, mínimo cinco caracteres...")
     validateUserIdAttempts()
 
 
 def getUserId():
-    print("Ingrese su ID (Alfanumérico), cinco caracteres mínimo")
-    userId = input("> ")
+    userId = input("Ingrese su ID (debe contener al menos cinco caractéres): \n> ")
     return validateUserId(userId)
 
 
+# >>> Escogencia de PIN
+# Solicitar al usuario que cree su PIN
+def createPIN():
+    while True:
+        try:
+            userPin = getpass.getpass("Digite su PIN (debe contener al menos 6 dígitos): ")
+            userPin = int(userPin)  # Convertir a número entero
+            if 000000 <= userPin <= 999999:
+                return userPin
+            else:
+                print(">>> El PIN debe contener al menos 6 dígitos. Inténtelo nuevamente.")
+        except ValueError:
+            print(">>> Ingrese solo números.")
+    
+
+# Autenticar el PIN (confirmación)
+def authenticatePin(userPin):
+    while True:
+        try:
+            confirmPin = int(getpass.getpass("Digite nuevamente su PIN para confirmar: "))
+            if userPin == confirmPin:
+                print("\nPIN creado con éxito.")
+                return userPin
+            else:
+                print(">>> El PIN no coincide. Inténtelo nuevamente.")
+        except ValueError:
+            print(">>> Ingrese solo números.")
+
+
+# Crear y autenticar el PIN 
+def getUserPin():
+    userPin = createPIN()
+    authenticatePin(userPin) 
+    return userPin
+
+
+# >>> Depositar el dinero
+# Controlar número de intentos del depósito
+def validateDepositAttempts():
+    totalDepositValidAttempts = 3
+    global depositAttempts
+    depositAttempts += 1
+
+    if (depositAttempts == totalDepositValidAttempts):
+        print(f"\nHa excedido el máximo de {totalDepositValidAttempts} intentos para realizar el depósito, volviendo al menú principal...")
+        from index import start
+        start()
+    else:
+        getDeposit()
+
+
+def getDeposit():
+    global minMoney # Variable para almacenar el monto mínimo requerido de deposito
+    minMoney = 10000 # Monto temporal - Se configurará correctamente cuando estén los archivos de configuración avanzada
+    try:
+        depositMoney = float(input(f"Ingrese el monto a depositar (mínimo ${minMoney}): \n> "))
+        if(depositMoney >= minMoney):
+            # Pendiente: Cuando estén los archivos, almacenar el monto ingresado a la cuenta del usuario respectivo
+            print("Deposito realizado con éxito. Registro de usuario culminado.")
+            # Punto 5 pendiente acá, usar las variables globales y el depositMoney para guardar los datos del usuario.
+            # Punto 6 (Salir)
+        else: 
+            validateDepositAttempts()
+            print(">>> El monto ingresado no es válido, debe ser mínimo $"+str(minMoney)+". Le quedan "+str(depositAttempts)+" intentos.") 
+    except ValueError:
+        print(">>> Ingrese solo números.")
+        
+
 def addRegistration():
-    print("Registro de nuevo usuario")
-    # punto 1
-    userId = getUserId()
-    print(f"id usuario: {userId}")  # línea de prueba, borrarla
-    # punto 2
-    userName = input("Ingrese su nombre: ")
+    print("\n♦ Registro de nuevo usuario")
+    global userId
+    global userName
+    global userPin
+
+    userId = getUserId() # Punto 1
+    userName = input("Ingrese su nombre: ") # Punto 2
+    userPin = getUserPin() # Punto 3
+    getDeposit() # Punto 4
