@@ -4,6 +4,11 @@ import getpass
 userIdAttempts = 0
 
 
+def returnToMainMenu():
+    from index import start
+    start()
+
+
 def validateUserIdAttempts():
     totalUserIdValidAttempts = 3
     global userIdAttempts
@@ -14,8 +19,7 @@ def validateUserIdAttempts():
             f"\nHa excedido el máximo de {totalUserIdValidAttempts} intentos para ingresar un ID válido, volviendo al menú principal...")
 
         # importante importar aquí y no al inicio para evitar una importación circular entre ambos módulos
-        from index import start
-        start()
+        returnToMainMenu()
     else:
         addRegistration()
 
@@ -92,7 +96,7 @@ def getDeposit():
             if(depositMoney >= minMoney):
                 print("Deposito realizado con éxito. ¡Registro de usuario completado!")
                 # Punto 5 pendiente acá, usar las variables globales y el depositMoney para guardar los datos del usuario.
-                # Punto 6 (Salir al menú principal)
+                returnToMainMenu() # Punto 6 (Salir al menú principal)
             else: 
                 totalDepositValidAttempts = 3
                 depositAttempts += 1
