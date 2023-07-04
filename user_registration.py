@@ -41,7 +41,7 @@ def validateUserId(userId):
 
 
 def getUserId():
-    userId = input("Ingrese su ID (debe contener al menos cinco caractéres): \n> ")
+    userId = input("Ingrese su ID (debe contener al menos cinco caractéres):\n> ")
     return validateUserId(userId)
 
 
@@ -50,7 +50,7 @@ def getUserId():
 def createPIN():
     while True:
         try:
-            userPin = str(getpass.getpass("Digite su PIN (debe contener al menos 6 dígitos): "))
+            userPin = str(getpass.getpass("Digite su PIN (debe contener al menos 6 dígitos):\n> "))
             if len(userPin) >= 6:
                 return userPin
             else:
@@ -63,9 +63,9 @@ def createPIN():
 def authenticatePin(userPin):
     while True:
         try:
-            confirmPin = int(getpass.getpass("Digite nuevamente su PIN para confirmar: "))
+            confirmPin = str(getpass.getpass("Digite nuevamente su PIN para confirmar:\n> "))
             if userPin == confirmPin:
-                print("\nPIN creado con éxito.")
+                print(">>> PIN creado con éxito.")
                 return userPin
             else:
                 print(">>> El PIN no coincide. Inténtelo nuevamente.")
@@ -88,7 +88,7 @@ def getDeposit():
     depositMoney = 0
     while (depositAttempts != 3) and (depositMoney < minMoney):
         try:
-            depositMoney = float(input(f"Ingrese el monto a depositar (mínimo ${minMoney}): \n> "))
+            depositMoney = float(input(f"Ingrese el monto a depositar para finalizar (mínimo ${minMoney}): \n> "))
             if(depositMoney >= minMoney):
                 print("Deposito realizado con éxito. ¡Registro de usuario completado!")
                 # Punto 5 pendiente acá, usar las variables globales y el depositMoney para guardar los datos del usuario.
@@ -113,6 +113,6 @@ def addRegistration():
     global userPin
 
     userId = getUserId() # Punto 1
-    userName = input("Ingrese su nombre: ") # Punto 2
+    userName = input("Ingrese su nombre: \n> ") # Punto 2
     userPin = getUserPin() # Punto 3
     getDeposit() # Punto 4
