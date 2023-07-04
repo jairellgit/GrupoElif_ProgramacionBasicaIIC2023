@@ -50,9 +50,9 @@ def getUserId():
 def createPIN():
     while True:
         try:
-            userPin = str(getpass.getpass("Digite su PIN (debe contener al menos 6 dígitos):\n> "))
-            if len(userPin) >= 6:
-                return userPin
+            userPin = int(getpass.getpass("Digite su PIN (debe contener al menos 6 dígitos):\n> "))
+            if len(str(userPin)) >= 6:
+                return str(userPin)
             else:
                 print(">>> El PIN debe contener al menos 6 dígitos. Inténtelo nuevamente.")
         except ValueError:
@@ -63,8 +63,8 @@ def createPIN():
 def authenticatePin(userPin):
     while True:
         try:
-            confirmPin = str(getpass.getpass("Digite nuevamente su PIN para confirmar:\n> "))
-            if userPin == confirmPin:
+            confirmPin = int(getpass.getpass("Digite nuevamente su PIN para confirmar:\n> "))
+            if userPin == str(confirmPin):
                 print(">>> PIN creado con éxito.")
                 return userPin
             else:
