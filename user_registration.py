@@ -1,12 +1,8 @@
 import getpass
+from helpers import returnToMainMenu 
 
 
 userIdAttempts = 0
-
-
-def returnToMainMenu():
-    from index import start
-    start()
 
 
 def validateUserIdAttempts():
