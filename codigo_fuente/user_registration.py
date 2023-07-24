@@ -1,6 +1,6 @@
 import getpass
 import os
-from helpers import returnToMainMenu 
+import helpers
 
 
 # >>> Escogencia de nombre de usuario
@@ -12,7 +12,9 @@ def getUsername():
 # >>> Escogencia de ID
 # Solicitar al usuario que cree su ID
 
+
 userIdAttempts = 0
+
 
 def validateUserIdAttempts():
     totalUserIdValidAttempts = 3
@@ -23,7 +25,7 @@ def validateUserIdAttempts():
         print(
             f"\nHa excedido el máximo de {totalUserIdValidAttempts} intentos para ingresar un ID válido, volviendo al menú principal...")
 
-        returnToMainMenu()
+        helpers.returnToMainMenu()
     else:
         startUserRegistration()
 
@@ -49,7 +51,8 @@ def validateUserId(userId):
 
 
 def getUserId():
-    userId = input("Ingrese su ID (debe contener al menos cinco caractéres):\n> ")
+    userId = input(
+        "Ingrese su ID (debe contener al menos cinco caractéres):\n> ")
     return validateUserId(userId)
 
 
@@ -58,20 +61,23 @@ def getUserId():
 def createPIN():
     while True:
         try:
-            userPin = int(getpass.getpass("Digite su PIN (debe contener al menos 6 dígitos):\n> "))
+            userPin = int(getpass.getpass(
+                "Digite su PIN (debe contener al menos 6 dígitos):\n> "))
             if len(str(userPin)) >= 6:
                 return str(userPin)
             else:
-                print(">>> El PIN debe contener al menos 6 dígitos. Inténtelo nuevamente.")
+                print(
+                    ">>> El PIN debe contener al menos 6 dígitos. Inténtelo nuevamente.")
         except ValueError:
             print(">>> Ingrese solo números.")
-            
+
 
 # Autenticar el PIN (confirmación)
 def authenticatePin(userPin):
     while True:
         try:
-            confirmPin = int(getpass.getpass("Digite nuevamente su PIN para confirmar:\n> "))
+            confirmPin = int(getpass.getpass(
+                "Digite nuevamente su PIN para confirmar:\n> "))
             if userPin == str(confirmPin):
                 print(">>> PIN creado con éxito.")
                 return userPin
@@ -81,60 +87,67 @@ def authenticatePin(userPin):
             print(">>> Ingrese solo números.")
 
 
-# Crear y autenticar el PIN 
+# Crear y autenticar el PIN
 def getUserPin():
     userPin = createPIN()
-    authenticatePin(userPin) 
+    authenticatePin(userPin)
     return userPin
 
 
 # >>> Depositar el dinero
 def getDeposit():
-    global minMoney 
-    minMoney = 10000 # Monto temporal - Se configurará correctamente cuando estén los archivos de configuración avanzada
+    global minMoney
+    minMoney = 10000  # Monto temporal - Se configurará correctamente cuando estén los archivos de configuración avanzada
     depositAttempts = 0
     depositMoney = 0
     while (depositAttempts != 3) and (depositMoney < minMoney):
         try:
-            depositMoney = float(input(f"Ingrese el monto a depositar para finalizar (mínimo ${minMoney}): \n> "))
-            if(depositMoney >= minMoney):
+            depositMoney = float(
+                input(f"Ingrese el monto a depositar para finalizar (mínimo ${minMoney}): \n> "))
+            if (depositMoney >= minMoney):
                 print("Deposito realizado con éxito. ¡Registro de usuario completado!")
                 return depositMoney
-            else: 
+            else:
                 totalDepositValidAttempts = 3
                 depositAttempts += 1
 
                 if (depositAttempts == totalDepositValidAttempts):
-                    print(f"\nHa excedido el máximo de {totalDepositValidAttempts} intentos para realizar el depósito, volviendo al menú principal...")
-                    returnToMainMenu()
+                    print(
+                        f"\nHa excedido el máximo de {totalDepositValidAttempts} intentos para realizar el depósito, volviendo al menú principal...")
+                    helpers.returnToMainMenu()
                 else:
                     attemptsLeft = 3 - depositAttempts
-                    print(">>> El monto ingresado no es válido, debe ser mínimo $"+str(minMoney)+". Le quedan "+str(attemptsLeft)+" intentos.") 
+                    print(">>> El monto ingresado no es válido, debe ser mínimo $" +
+                          str(minMoney)+". Le quedan "+str(attemptsLeft)+" intentos.")
         except ValueError:
             print(">>> Ingrese solo números.")
 
 # >>> Guardado de información del usuario
+
+
 def addRegistration(userInfo, depositMoney):
-    print('hola soy punto 5 :D')
+    print('punto 5 aquí')
+
 
 # >>> Métodos principales del módulo
+
+
 def getUserInfo():
     global userId
     global userName
     global userPin
 
-    userId = getUserId() # Punto 1
-    userName = getUsername() # Punto 2
-    userPin = getUserPin() # Punto 3
+    userId = getUserId()  # Punto 1
+    userName = getUsername()  # Punto 2
+    userPin = getUserPin()  # Punto 3
 
     userInfo = [userId, userName, userPin]
     return userInfo
 
 
-
 def startUserRegistration():
     print("\n♦ Registro de nuevo usuario")
-    userInfo = getUserInfo() # Engloba puntos 1, 2 y 3
-    depositMoney = getDeposit() # Punto 4
-    addRegistration(userInfo, depositMoney) # Punto 5
-    returnToMainMenu() # Punto 6
+    userInfo = getUserInfo()  # Engloba puntos 1, 2 y 3
+    depositMoney = getDeposit()  # Punto 4
+    addRegistration(userInfo, depositMoney)  # Punto 5
+    helpers.returnToMainMenu()  # Punto 6
