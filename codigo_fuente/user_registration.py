@@ -1,9 +1,18 @@
 import getpass
+import os
 from helpers import returnToMainMenu 
 
 
-userIdAttempts = 0
+# >>> Escogencia de nombre de usuario
+# Solicitar al usuario que cree su nombre de usuario
+def getUsername():
+    username = input("Ingrese su nombre de usuario: \n> ")
+    return username
 
+# >>> Escogencia de ID
+# Solicitar al usuario que cree su ID
+
+userIdAttempts = 0
 
 def validateUserIdAttempts():
     totalUserIdValidAttempts = 3
@@ -14,10 +23,9 @@ def validateUserIdAttempts():
         print(
             f"\nHa excedido el máximo de {totalUserIdValidAttempts} intentos para ingresar un ID válido, volviendo al menú principal...")
 
-        # importante importar aquí y no al inicio para evitar una importación circular entre ambos módulos
         returnToMainMenu()
     else:
-        addRegistration()
+        startUserRegistration()
 
 
 # def isUserExists(userId):
@@ -92,6 +100,7 @@ def getDeposit():
             if(depositMoney >= minMoney):
                 print("Deposito realizado con éxito. ¡Registro de usuario completado!")
                 # Punto 5 pendiente acá, usar las variables globales y el depositMoney para guardar los datos del usuario.
+
                 returnToMainMenu() # Punto 6 (Salir al menú principal)
             else: 
                 totalDepositValidAttempts = 3
@@ -105,14 +114,24 @@ def getDeposit():
         except ValueError:
             print(">>> Ingrese solo números.")
 
+# >>> Guardado de información del usuario
 
-def addRegistration():
-    print("\n♦ Registro de nuevo usuario")
+# >>> Métodos principales del módulo
+def getUserInfo():
     global userId
     global userName
     global userPin
 
     userId = getUserId() # Punto 1
-    userName = input("Ingrese su nombre: \n> ") # Punto 2
+    userName = getUsername() # Punto 2
     userPin = getUserPin() # Punto 3
+
+    userInfo = [userId, userName, userPin]
+    return userInfo
+
+
+
+def startUserRegistration():
+    print("\n♦ Registro de nuevo usuario")
+    userInfo = getUserInfo() # Engloba puntos 1, 2 y 3
     getDeposit() # Punto 4
