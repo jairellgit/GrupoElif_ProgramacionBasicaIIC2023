@@ -49,37 +49,3 @@ def login():
             else:
                 attemptsLeft = 3 - userIdAttempts
                 print(">>> El dato ingresado no es válido. Le quedan "+str(attemptsLeft)+" intentos.") 
-
-
-def menuCasino():
-    print("\n♦♦♦ Hola "+userNameTxt+", bienvenido/a al Dreamworld Casino, ingrese la opcion que desee realizar ♦♦♦")
-    
-    while True:
-
-        print("1) Retirar Dinero")
-        print("2) Depositar Dinero")
-        print("3) Ver saldo actual")
-        print("4) Juegos en linea")
-        print("5) Eliminar usuario")
-        print("6) Salir")
-
-        option = int(input("\n>"))
-
-        if(option == 1):
-            print()
-        elif(option == 2):
-            print()
-        elif(option == 3):
-            print()
-        elif(option == 4):
-            print()
-        elif(option == 5):
-            print()
-        elif(option == 6):
-            print()  
-        else:
-            print("Opción no válida. Inténtelo nuevamente")
-
-
-#def userExists():
-    #En este metodo se valida que en el archivo exista al menos un usuario
