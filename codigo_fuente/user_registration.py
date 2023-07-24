@@ -5,6 +5,10 @@ import helpers
 # Variables de ámbito global
 userInfo = []
 userIdAttempts = 0
+userId = ""
+userName = ""
+userPin = 0 
+userDeposit = 0
 
 # >>> Escogencia de nombre de usuario
 # Solicitar al usuario que cree su nombre de usuario
@@ -20,7 +24,6 @@ def getUsername():
 
 def validateUserIdAttempts():
     totalUserIdValidAttempts = 3
-    global userIdAttempts
     userIdAttempts += 1
 
     if (userIdAttempts == totalUserIdValidAttempts):
@@ -182,6 +185,7 @@ def startUserRegistration():
     global userInfo
 
     print("\n♦ Registro de nuevo usuario")
+
     userInfo = getUserInfo()  # Engloba puntos 1, 2 y 3
     userInfo.append(getDeposit())  # Punto 4
     addRegistration()  # Punto 5

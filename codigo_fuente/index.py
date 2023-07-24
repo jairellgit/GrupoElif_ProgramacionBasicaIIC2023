@@ -1,5 +1,6 @@
 from menu import runMainMenu
 from user_registration import startUserRegistration
+from user_authentication import login
 
 
 def start():
@@ -8,9 +9,7 @@ def start():
     if menuOption == 1:
         startUserRegistration()
     elif menuOption == 2:
-        # Eliminar cuando ya esté listo:
-        print(">>> Opción no disponible aún. Regresando al menú principal...")
-        start()
+        login()
     elif menuOption == 3:
         # Eliminar cuando ya esté listo:
         print(">>> Opción no disponible aún. Regresando al menú principal...")
