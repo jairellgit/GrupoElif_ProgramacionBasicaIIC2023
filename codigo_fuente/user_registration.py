@@ -99,6 +99,7 @@ def getDeposit():
             depositMoney = float(input(f"Ingrese el monto a depositar para finalizar (mínimo ${minMoney}): \n> "))
             if(depositMoney >= minMoney):
                 print("Deposito realizado con éxito. ¡Registro de usuario completado!")
+                return depositMoney
             else: 
                 totalDepositValidAttempts = 3
                 depositAttempts += 1
@@ -113,7 +114,7 @@ def getDeposit():
             print(">>> Ingrese solo números.")
 
 # >>> Guardado de información del usuario
-def addRegistration():
+def addRegistration(userInfo, depositMoney):
     print('hola soy punto 5 :D')
 
 # >>> Métodos principales del módulo
@@ -134,6 +135,6 @@ def getUserInfo():
 def startUserRegistration():
     print("\n♦ Registro de nuevo usuario")
     userInfo = getUserInfo() # Engloba puntos 1, 2 y 3
-    getDeposit() # Punto 4
-    addRegistration() # Punto 5
-    returnToMainMenu() # Punto 6 (Salir al menú principal)
+    depositMoney = getDeposit() # Punto 4
+    addRegistration(userInfo, depositMoney) # Punto 5
+    returnToMainMenu() # Punto 6
