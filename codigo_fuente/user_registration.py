@@ -1,13 +1,18 @@
 import getpass
-from helpers import returnToMainMenu 
+import helpers 
 
+global minMoney 
 
 userIdAttempts = 0
+userId = ""
+userName = ""
+userPin = 0 
+userDeposit = 0
 
+flagDeposit = False
 
 def validateUserIdAttempts():
     totalUserIdValidAttempts = 3
-    global userIdAttempts
     userIdAttempts += 1
 
     if (userIdAttempts == totalUserIdValidAttempts):
@@ -15,7 +20,7 @@ def validateUserIdAttempts():
             f"\nHa excedido el máximo de {totalUserIdValidAttempts} intentos para ingresar un ID válido, volviendo al menú principal...")
 
         # importante importar aquí y no al inicio para evitar una importación circular entre ambos módulos
-        returnToMainMenu()
+        helpers.returnToMainMenu()
     else:
         addRegistration()
 
@@ -81,8 +86,7 @@ def getUserPin():
 
 
 # >>> Depositar el dinero
-def getDeposit():
-    global minMoney 
+def getDeposit(): 
     minMoney = 10000 # Monto temporal - Se configurará correctamente cuando estén los archivos de configuración avanzada
     depositAttempts = 0
     depositMoney = 0
@@ -91,14 +95,15 @@ def getDeposit():
             depositMoney = float(input(f"Ingrese el monto a depositar para finalizar (mínimo ${minMoney}): \n> "))
             if(depositMoney >= minMoney):
                 print("Deposito realizado con éxito. ¡Registro de usuario completado!")
-                # Punto 5 pendiente acá, usar las variables globales y el depositMoney para guardar los datos del usuario.
-                returnToMainMenu() # Punto 6 (Salir al menú principal)
+                flagDeposit = True
+                return depositMoney, flagDeposit
             else: 
                 totalDepositValidAttempts = 3
                 depositAttempts += 1
 
                 if (depositAttempts == totalDepositValidAttempts):
                     print(f"\nHa excedido el máximo de {totalDepositValidAttempts} intentos para realizar el depósito, volviendo al menú principal...")
+                    helpers.returnToMainMenu()
                 else:
                     attemptsLeft = 3 - depositAttempts
                     print(">>> El monto ingresado no es válido, debe ser mínimo $"+str(minMoney)+". Le quedan "+str(attemptsLeft)+" intentos.") 
@@ -108,11 +113,13 @@ def getDeposit():
 
 def addRegistration():
     print("\n♦ Registro de nuevo usuario")
-    global userId
-    global userName
-    global userPin
 
     userId = getUserId() # Punto 1
     userName = input("Ingrese su nombre: \n> ") # Punto 2
     userPin = getUserPin() # Punto 3
-    getDeposit() # Punto 4
+    userDeposit, flagDeposit = getDeposit() # Punto 4
+
+    if (flagDeposit == True):
+        # Punto 5 pendiente acá, usar las variables globales y el depositMoney para guardar los datos del usuario.
+        print(f"Testing: Usuario(ID) {userId}, Nombre {userName}, Pin {userPin}, Deposit {userDeposit}") #Linea de prueba
+        helpers.returnToMainMenu() # Punto 6 (Salir al menú principal)
