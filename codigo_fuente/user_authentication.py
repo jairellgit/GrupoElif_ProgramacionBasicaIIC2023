@@ -78,3 +78,6 @@ def menuCasino():
             print()  
         else:
             print("Opción no válida. Inténtelo nuevamente")
+            
+#def userExists():
+    #En este metodo se valida que en el archivo exista al menos un usuario
