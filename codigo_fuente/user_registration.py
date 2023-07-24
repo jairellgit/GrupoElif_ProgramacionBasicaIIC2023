@@ -32,8 +32,8 @@ def validateUserIdAttempts():
         startUserRegistration()
 
 
-# def isUserExists(userId):
-    # Esta función booleana valida si un usuario existe o no
+def isUserExists(userId):
+    return os.path.exists(f"users/{userId}")
 
 
 def isValidUserId(userId):
@@ -43,9 +43,9 @@ def isValidUserId(userId):
 
 def validateUserId(userId):
     if isValidUserId(userId):
-        # if isUserExists(userId):
-        #  print("\nEste userId ya es ocupado por otro usuario, intente nuevamente...")
-        #  return validateUserIdAttempts()
+        if isUserExists(userId):
+            print("\nEste userId ya es ocupado por otro usuario, intente nuevamente...")
+            return validateUserIdAttempts()
         return userId
 
     print("\n>>> ID de usuario inválido, mínimo cinco caracteres...")
@@ -134,7 +134,8 @@ def setCredentials():
     userPin = userInfo[2]
     credentialsPath = "usuarios_pines.txt"
 
-    with open(credentialsPath, 'w') as credentialsFile:
+    appendMode = 'a'
+    with open(credentialsPath, appendMode) as credentialsFile:
         credentialsFile.write(f"{userId}\n{userPin}\n")
 
 
@@ -148,7 +149,9 @@ def setDepositMoney():
     os.makedirs(userPath)
     userPath += '/saldos.txt'
 
-    with open(userPath, 'w') as moneyFile:
+    # 'with' utilizado para cerrar archivos después de su uso.
+    overwriteMode = 'w'
+    with open(userPath, overwriteMode) as moneyFile:
         moneyFile.write(str(userDepositMoney))
 
 
@@ -174,8 +177,6 @@ def startUserRegistration():
 
     print("\n♦ Registro de nuevo usuario")
     userInfo = getUserInfo()  # Engloba puntos 1, 2 y 3
-    depositMoney = getDeposit()  # Punto 4
-
-    userInfo.append(depositMoney)
+    userInfo.append(getDeposit())  # Punto 4
     addRegistration()  # Punto 5
     helpers.returnToMainMenu()  # Punto 6
