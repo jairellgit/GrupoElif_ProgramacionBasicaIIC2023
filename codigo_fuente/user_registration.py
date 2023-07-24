@@ -2,18 +2,20 @@ import getpass
 import os
 import helpers
 
+# Variables de ámbito global
+userInfo = []
+userIdAttempts = 0
 
 # >>> Escogencia de nombre de usuario
 # Solicitar al usuario que cree su nombre de usuario
+
+
 def getUsername():
     username = input("Ingrese su nombre de usuario: \n> ")
     return username
 
 # >>> Escogencia de ID
 # Solicitar al usuario que cree su ID
-
-
-userIdAttempts = 0
 
 
 def validateUserIdAttempts():
@@ -125,18 +127,40 @@ def getDeposit():
 # >>> Guardado de información del usuario
 
 
-def addRegistration(userInfo, depositMoney):
-    print('punto 5 aquí')
+def setCredentials():
+    global userInfo
+
+    userId = userInfo[0]
+    userPin = userInfo[2]
+    credentialsPath = "usuarios_pines.txt"
+
+    with open(credentialsPath, 'w') as credentialsFile:
+        credentialsFile.write(f"{userId}\n{userPin}\n")
+
+
+def setDepositMoney():
+    global userInfo
+
+    userId = userInfo[0]
+    userDepositMoney = userInfo[3]
+    userPath = f"users/{userId}"
+
+    os.makedirs(userPath)
+    userPath += '/saldos.txt'
+
+    with open(userPath, 'w') as moneyFile:
+        moneyFile.write(str(userDepositMoney))
+
+
+def addRegistration():
+    setDepositMoney()
+    setCredentials()
 
 
 # >>> Métodos principales del módulo
 
 
 def getUserInfo():
-    global userId
-    global userName
-    global userPin
-
     userId = getUserId()  # Punto 1
     userName = getUsername()  # Punto 2
     userPin = getUserPin()  # Punto 3
@@ -146,8 +170,12 @@ def getUserInfo():
 
 
 def startUserRegistration():
+    global userInfo
+
     print("\n♦ Registro de nuevo usuario")
     userInfo = getUserInfo()  # Engloba puntos 1, 2 y 3
     depositMoney = getDeposit()  # Punto 4
-    addRegistration(userInfo, depositMoney)  # Punto 5
+
+    userInfo.append(depositMoney)
+    addRegistration()  # Punto 5
     helpers.returnToMainMenu()  # Punto 6
