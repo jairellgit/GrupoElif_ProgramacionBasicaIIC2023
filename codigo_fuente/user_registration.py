@@ -97,9 +97,15 @@ def getUserPin():
 
 
 # >>> Depositar el dinero
+
+# Monto temporal - Se configurará correctamente cuando estén los archivos de configuración avanzada
+def getMinDeposit():
+    return 10000
+
+
 def getDeposit():
     global minMoney
-    minMoney = 10000  # Monto temporal - Se configurará correctamente cuando estén los archivos de configuración avanzada
+    minMoney = getMinDeposit()
     depositAttempts = 0
     depositMoney = 0
     while (depositAttempts != 3) and (depositMoney < minMoney):
