@@ -100,3 +100,35 @@ def printMenuMoneyType():
     print("2) Dólares")
     print("3) Bitcoin")
 
+
+# Contador de intentos
+def attemptsDeposit(depositMoney, depositAttempts, type):
+    minimo = 0
+    if (type == 1):
+        minimo = minMoneyColon
+    elif (type == 2):
+        minimo = minMoneyDolar
+    elif (type == 3):
+        minimo = minMoneyBitcoin
+        
+    if(depositMoney >= minMoneyDolar):
+        print("\n>>> Deposito realizado con éxito. ¡Registro de usuario completado!")
+        flagDeposit = True
+        return depositMoney, 3, flagDeposit
+    else: 
+        totalDepositValidAttempts = 3
+        depositAttempts += 1
+
+        if (depositAttempts == totalDepositValidAttempts):
+            print(f"\nHa excedido el máximo de {totalDepositValidAttempts} intentos para realizar el depósito, volviendo al menú principal...")
+            helpers.returnToMainMenu()
+        else:
+            attemptsLeft = 3 - depositAttempts
+            if (type == 1): #Colones
+                print("\n>>> El monto ingresado no es válido, debe equivaler mínimo a ₡"+str(minMoneyColon)+". Le quedan "+str(attemptsLeft)+" intentos.") 
+            elif (type == 2): #Dolares
+                print("\n>>> El monto ingresado no es válido, debe equivaler mínimo a $"+str(minMoneyDolar)+". Le quedan "+str(attemptsLeft)+" intentos.") 
+            elif (type == 3): #Bitcoin
+                print("\n>>> El monto ingresado no es válido, debe equivaler mínimo a ₿"+str(minMoneyBitcoin)+". Le quedan "+str(attemptsLeft)+" intentos.") 
+
+        return depositMoney, depositAttempts, False
