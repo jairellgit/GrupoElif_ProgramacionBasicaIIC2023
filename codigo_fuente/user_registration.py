@@ -89,3 +89,14 @@ def getUserPin():
     userPin = createPIN()
     authenticatePin(userPin) 
     return userPin
+
+
+# >>> Depositar el dinero
+# Menú opciones deposito
+def printMenuMoneyType():
+
+    print("\nDepósito:")
+    print("1) Colones")
+    print("2) Dólares")
+    print("3) Bitcoin")
+
