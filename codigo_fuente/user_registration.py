@@ -132,3 +132,19 @@ def attemptsDeposit(depositMoney, depositAttempts, type):
                 print("\n>>> El monto ingresado no es válido, debe equivaler mínimo a ₿"+str(minMoneyBitcoin)+". Le quedan "+str(attemptsLeft)+" intentos.") 
 
         return depositMoney, depositAttempts, False
+
+
+# Convertir el dinero
+def convertMoney(depositMoney, moneyType):
+    listaTipoDeCambio = helpers.tipoDeCambio()
+
+    if moneyType == 1: #Valor equivalente de 1 Dolar a Colones
+        valorColon = float(listaTipoDeCambio[1])        
+        ConvDepositMoney = depositMoney / valorColon
+    elif moneyType == 3: #Valor equivalente de 1 Dolar a Bitcoins
+        valorBitcoin = float(listaTipoDeCambio[2])
+        ConvDepositMoney = depositMoney / valorBitcoin
+    else: #Dólares
+        ConvDepositMoney = depositMoney
+
+    return ConvDepositMoney
