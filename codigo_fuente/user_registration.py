@@ -148,3 +148,39 @@ def convertMoney(depositMoney, moneyType):
         ConvDepositMoney = depositMoney
 
     return ConvDepositMoney
+
+
+# Función general para el deposito
+def getDeposit(depositMoney, depositAttempts): 
+    flagDeposit = False
+
+    while (depositAttempts != 3):
+        try:
+            printMenuMoneyType()
+            moneyType = int(input(f"Digite el número de opción correspondiente al tipo de moneda que desea depositar: \n> "))
+
+            #Se le indica el monto mínimo según la opción elegida 
+            if moneyType == 1: #Colones
+                depositMoney = float(input(f"Ingrese el monto a depositar para finalizar (mínimo ₡{minMoneyColon}): \n> "))
+                depositMoneyConverted = convertMoney(depositMoney, moneyType)
+                print("Dinero a doláres: "+ str(depositMoneyConverted))
+                depositMoney, depositAttempts, flagDeposit = attemptsDeposit(depositMoneyConverted, depositAttempts, 1)
+
+            elif moneyType == 2: #Dólares
+                depositMoney = float(input(f"Ingrese el monto a depositar para finalizar (mínimo ${minMoneyDolar}): \n> "))
+                depositMoneyConverted = convertMoney(depositMoney, moneyType)
+                print("Dinero a doláres: "+ str(depositMoneyConverted))
+                depositMoney, depositAttempts, flagDeposit = attemptsDeposit(depositMoneyConverted, depositAttempts, 2)
+
+            elif moneyType == 3: #Bitcoin
+                depositMoney = float(input(f"Ingrese el monto a depositar para finalizar (mínimo ₿{minMoneyBitcoin}): \n> "))
+                depositMoneyConverted = convertMoney(depositMoney, moneyType)
+                print("Dinero a doláres: "+ str(depositMoneyConverted))
+                depositMoney, depositAttempts, flagDeposit = attemptsDeposit(depositMoneyConverted, depositAttempts, 3)
+
+            else:
+                print("\n>>> Opción no válida. Inténtelo nuevamente")
+
+        except ValueError:
+            print("\n>>> Ingrese solo números.")
+    return depositMoney, flagDeposit
