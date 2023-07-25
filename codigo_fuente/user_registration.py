@@ -184,3 +184,20 @@ def getDeposit(depositMoney, depositAttempts):
         except ValueError:
             print("\n>>> Ingrese solo números.")
     return depositMoney, flagDeposit
+
+
+def addRegistration():
+    depositMoney = 0
+    depositAttempts = 0
+
+    print("\n♦ Registro de nuevo usuario")
+
+    userId = getUserId() # Punto 1
+    userName = input("Ingrese su nombre: \n> ") # Punto 2
+    userPin = getUserPin() # Punto 3
+    userDeposit, flagDeposit = getDeposit(depositMoney, depositAttempts) # Punto 4
+
+    if (flagDeposit == True):
+        # Punto 5 pendiente acá, usar las variables y el depositMoney para guardar los datos del usuario.
+        print(f"Testing: Usuario(ID) {userId}, Nombre {userName}, Pin {userPin}, Deposit {userDeposit}") #Linea de prueba
+        helpers.returnToMainMenu() # Punto 6 (Salir al menú principal)
