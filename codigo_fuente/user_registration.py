@@ -55,3 +55,37 @@ def getUserId():
     userId = input("Ingrese su ID (debe contener al menos cinco caractéres):\n> ")
     return validateUserId(userId)
 
+
+# >>> Escogencia de PIN
+# Solicitar al usuario que cree su PIN
+def createPIN():
+    while True:
+        try:
+            userPin = int(getpass.getpass("Digite su PIN (debe contener al menos 6 dígitos):\n> "))
+            if len(str(userPin)) >= 6:
+                return str(userPin)
+            else:
+                print("\n>>> El PIN debe contener al menos 6 dígitos. Inténtelo nuevamente.\n")
+        except ValueError:
+            print(">>> Ingrese solo números.")
+            
+
+# Autenticar el PIN (confirmación)
+def authenticatePin(userPin):
+    while True:
+        try:
+            confirmPin = int(getpass.getpass("Digite nuevamente su PIN para confirmar:\n> "))
+            if userPin == str(confirmPin):
+                print(">>> PIN creado con éxito.")
+                return userPin
+            else:
+                print(">>> El PIN no coincide. Inténtelo nuevamente.")
+        except ValueError:
+            print(">>> Ingrese solo números.")
+
+
+# Crear y autenticar el PIN 
+def getUserPin():
+    userPin = createPIN()
+    authenticatePin(userPin) 
+    return userPin
