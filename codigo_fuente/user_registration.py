@@ -262,6 +262,6 @@ def startUserRegistration():
     print("\n♦ Registro de nuevo usuario")
 
     userInfo = getUserInfo()  # Engloba puntos 1, 2 y 3
-    userInfo.append(getDeposit())  # Punto 4
+    userInfo.append(getDeposit(depositMoney, depositAttempts)) # Punto 4
     addRegistration()  # Punto 5
     helpers.returnToMainMenu()  # Punto 6
