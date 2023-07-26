@@ -79,5 +79,5 @@ def menuCasino():
         else:
             print("Opción no válida. Inténtelo nuevamente")
             
-#def userExists():
-    #En este metodo se valida que en el archivo exista al menos un usuario
+def isUserExists(userId):
+    return os.path.exists(f"users/{userId}")
