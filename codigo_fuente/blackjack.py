@@ -7,6 +7,8 @@ def start():
     # amountToBet = getAmountToBet()
     # setAmountToBet(amountToBet)
 
+    play()
+
 
 def showInstructions():
     print("\nInstrucciones Blackjack")
@@ -39,3 +41,63 @@ def getValidAmountFormat():
             print("\n>>> Sólo se admiten números.")
 
     return amountToBet
+
+
+def play():
+    assignCards()
+
+
+playerCards = []
+crupierCards = []
+
+
+def assignCards():
+    getRandomCard()
+
+
+def getRandomCard():
+    cardValues = ["As", "2", "3", "4", "5", "6",
+                  "7", "8", "9", "10", "J", "Q", "K"]
+    cardTypes = ["Corazones", "Rombos", "Tréboles", "Picas"]
+
+    randomValue = random.randint(0, len(cardValues) - 1)
+    cardValue = cardValues[randomValue]
+    if (cardValue == "As"):
+        cardValue = f"{getAsCardValue()} (As)"
+
+    randomType = random.randint(0, len(cardTypes) - 1)
+    cardType = cardTypes[randomType]
+
+    cardColor = None
+    if ((cardType == "Corazones") or (cardType == "Rombos")):
+        cardColor = "Rojo"
+    elif ((cardType == "Tréboles") or (cardType == "Picas")):
+        cardColor = "Negro"
+
+    randomCard = f"{cardValue} de {cardType} {cardColor}"
+    return randomCard
+
+
+def getAsCardValue():
+    print("\nObtuvo un 'As', elija el valor del As: ")
+    print("1) Quiero que sea 1")
+    print("2) Quiero que sea 11")
+
+    while True:
+        option = input(">>> ")
+
+        if isValidAsCardOption(option):
+            if option == "1":
+                asCardValue = "1"
+            else:
+                asCardValue = "11"
+
+            break
+
+        print("\nValor del As inválido, reintente...")
+
+    return asCardValue
+
+
+def isValidAsCardOption(asCardOption):
+    return (asCardOption == "1") or (asCardOption == "2")

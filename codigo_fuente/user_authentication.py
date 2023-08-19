@@ -1,9 +1,23 @@
 import helpers
 import getpass
-import user_registration
+import os
 
-global userNameTxt
-userNameTxt = ""
+#Cuando se valide que existe el usuario, aqui se van a traer los valores del usuario (id, pin, nombre del usuario y dinero depositado). Para guardarlos en una lista
+userIdTxt =  "jai123" #Dato temporal
+userNameTxt = "Jairell" #Dato temporal
+userMoneyTxt = 10000 #Dato temporal
+userPinTxt = 123456 #Dato de prueba
+
+
+def printMenu():
+
+    print("\nMenú Opciones:")
+    print("1) Retirar Dinero")
+    print("2) Depositar Dinero")
+    print("3) Ver saldo actual")
+    print("4) Juegos en linea")
+    print("5) Eliminar usuario")
+    print("6) Salir")
 
 
 def login():
@@ -11,21 +25,15 @@ def login():
     userPinAttempts = 0
     totalValidAttempts = 3
 
-    #Cuando se valide que existe el usuario, aqui se van a traer los valores del usuario (id, pin, nombre del usuario y dinero depositado). Para guardarlos en una lista
-    userIdTxt =  "jai" #Dato temporal
-    userNameTxt = "Jairell" #Dato temporal
-    userMoneyTxt = 10000 #Dato temporal
-    userPinTxt = 123456 #Dato de prueba
-
     #userIdTxt es la futura variable que va a contener el dato que venga de la base de datos (txt)
     while (userIdAttempts != 3):
         #En un futuro, esta variable se tiene enviar a la base de datos (txt), para validar que exista este usuario
-        userId = input("Ingrese su ID:\n> ")
+        userId = input("Ingrese su ID (Usar: jai123):\n> ")
 
         if (userId == userIdTxt):
 
             while (userPinAttempts != 3):
-                userPin = int(getpass.getpass("Digite su PIN:\n> "))
+                userPin = int(getpass.getpass("Digite su PIN (Usar: 123456):\n> "))
                 #userPinTxt es la futura variable que va a contener el dato que venga de la base de datos (txt)
                 if(userPin == userPinTxt):
                     menuCasino()
@@ -50,34 +58,31 @@ def login():
                 attemptsLeft = 3 - userIdAttempts
                 print(">>> El dato ingresado no es válido. Le quedan "+str(attemptsLeft)+" intentos.")
                 
+
 def menuCasino():
-    print("\n♦♦♦ Hola "+userNameTxt+", bienvenido/a al Dreamworld Casino, ingrese la opcion que desee realizar ♦♦♦")
+    print("\n♦♦♦ Hola "+userNameTxt+", ¡bienvenido/a al Dreamworld Casino! ♦♦♦")
     
     while True:
 
-        print("1) Retirar Dinero")
-        print("2) Depositar Dinero")
-        print("3) Ver saldo actual")
-        print("4) Juegos en linea")
-        print("5) Eliminar usuario")
-        print("6) Salir")
-
-        option = int(input("\n>"))
+        printMenu()
+        option = int(input("Digite la opcion que desee realizar:\n>"))
 
         if(option == 1):
-            print()
+            print("\n>>> La opción seleccionada no se encuentra en funcionamiento aún.\n")
         elif(option == 2):
-            print()
+            print("\n>>> La opción seleccionada no se encuentra en funcionamiento aún.\n")
         elif(option == 3):
-            print()
+            print("\n>>> La opción seleccionada no se encuentra en funcionamiento aún.\n")
         elif(option == 4):
-            print()
+            print("\n>>> La opción seleccionada no se encuentra en funcionamiento aún.\n")
         elif(option == 5):
-            print()
+            print("\n>>> La opción seleccionada no se encuentra en funcionamiento aún.\n")
         elif(option == 6):
-            print()  
+            print("\n>>> Saliendo al menú principal...\n")
+            helpers.returnToMainMenu()
         else:
-            print("Opción no válida. Inténtelo nuevamente")
-            
-#def userExists():
-    #En este metodo se valida que en el archivo exista al menos un usuario
+            print("\n>>> Opción no válida. Inténtelo nuevamente\n")
+
+
+def isUserExists(userId):
+    return os.path.exists(f"users/{userId}")
