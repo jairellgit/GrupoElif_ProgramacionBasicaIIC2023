@@ -44,6 +44,7 @@ def getValidAmountFormat():
 
 
 def play():
+    print("\n¡Comienza el juego!")
     assignCards()
 
 
@@ -52,18 +53,40 @@ crupierCards = []
 
 
 def assignCards():
-    getRandomCard()
+    global playerCards
+    global crupierCards
+
+    print("El crupier reparte las cartas...\n")
+
+    assignCardsTurns = 2
+    for i in range(assignCardsTurns):
+        playerCards.append(getRandomCard("player"))
+        print(f"Te ha tocado un {playerCards[i]}")
+        crupierCards.append(getRandomCard("crupier"))
+        if i == 1:
+            print(f"Al crupier le tocó un {crupierCards[i]}")
+        else:
+            print("La primer carta del crupier esta oculta.")
+
+    # askToDobuleBet
+    askToDivideCards()
+    checkBlackjack()
+    blackjackMenu()
 
 
-def getRandomCard():
+def getRandomCard(user):
     cardValues = ["As", "2", "3", "4", "5", "6",
                   "7", "8", "9", "10", "J", "Q", "K"]
     cardTypes = ["Corazones", "Rombos", "Tréboles", "Picas"]
 
     randomValue = random.randint(0, len(cardValues) - 1)
     cardValue = cardValues[randomValue]
-    if (cardValue == "As"):
+    if (cardValue == "As" and user == "player"):
         cardValue = f"{getAsCardValue()} (As)"
+    elif (cardValue == "As" and user == "crupier"):
+        asValidValues = ["1", "11"]
+        randomAsValidValue = random.randint(0, 1)
+        cardValue = f"{asValidValues[randomAsValidValue]} (As)"
 
     randomType = random.randint(0, len(cardTypes) - 1)
     cardType = cardTypes[randomType]
@@ -101,3 +124,19 @@ def getAsCardValue():
 
 def isValidAsCardOption(asCardOption):
     return (asCardOption == "1") or (asCardOption == "2")
+
+
+def askToDobuleBet():
+    print("pendiente")
+
+
+def askToDivideCards():
+    print("pendiente")
+
+
+def checkBlackjack():
+    print("pendiente")
+
+
+def blackjackMenu():
+    print("pendiente")
