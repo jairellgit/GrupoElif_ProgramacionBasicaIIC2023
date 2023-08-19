@@ -69,8 +69,11 @@ def assignCards():
             print("La primer carta del crupier esta oculta.")
 
     # askToDobuleBet
+    arePlayerCardsEqual = playerCards[0] == playerCards[1]
+    # if (arePlayerCardsEqual):
     askToDivideCards()
-    checkBlackjack()
+
+    checkPlayerBlackjack()
     blackjackMenu()
 
 
@@ -131,11 +134,68 @@ def askToDobuleBet():
 
 
 def askToDivideCards():
-    print("pendiente")
+    print("Obtuvo 2 cartas iguales, ¿Desea dividir?")
+    print("1) Sí")
+    print("2) No")
+
+    while True:
+        option = input(">>> ")
+
+        if isValidDivideCardsOption(option):
+            break
+
+        print("\nOpción inválida, reintente...")
+
+    if option == "1":
+        divideCards()
 
 
-def checkBlackjack():
-    print("pendiente")
+def isValidDivideCardsOption(option):
+    return option == "1" or option == "2"
+
+
+def divideCards():
+    global playerCards
+
+    playerCards = [[playerCards[0]], [playerCards[1]]]
+
+
+def checkPlayerBlackjack():
+    global playerCards
+
+    values = getCardValues(playerCards)
+    sumValues = sum(values)
+
+    if sumValues == 21:
+        print("pendiente")
+        print(f"\nSuma {sumValues}, ¡Ha ganado!")
+        # verificar empate con el crupier
+        # jugador gana la apuesta
+    elif sumValues > 21:
+        print("pendiente")
+        print(f"\nSuma {sumValues}, ha perdido.")
+        # jugador pierde la apuesta
+
+
+def getCardValues(cards):
+    values = []
+    specialValues = ["J", "Q", "K"]
+
+    for i in range(len(cards)):
+        value = cards[i][:2]
+        value = value.replace(" ", "")
+
+        if (value in specialValues):
+            values.append(10)
+            continue
+
+        values.append(int(value))
+
+    return values
+
+
+# def checkCrupierBlackjack():
+#   global crupierCards
 
 
 def blackjackMenu():
