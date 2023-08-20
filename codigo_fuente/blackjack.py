@@ -56,6 +56,7 @@ crupierCards = []
 def assignCards():
     global playerCards
     global crupierCards
+    global hasDividedCards
 
     print("El crupier reparte las cartas...\n")
 
@@ -71,10 +72,12 @@ def assignCards():
 
     # askToDobuleBet
     arePlayerCardsEqual = playerCards[0] == playerCards[1]
-    # if (arePlayerCardsEqual):
-    askToDivideCards()  # Para dividir deben ser cartas de igual valor
+    if (arePlayerCardsEqual):
+        askToDivideCards()
 
-    checkPlayerBlackjack()
+    if not hasDividedCards:
+        checkScore(playerCards)
+
     menu()
 
 
@@ -188,7 +191,7 @@ def checkBlackjack(playerScore):
         print(
             f"\nPuntuación por encima de {blackjack}... Ha perdido su apuesta.")
         # Manejo de dinero, perdió su apuesta
-        return helpers.returnToMainMenu()
+        stayPlayingOrReturn()
 
     while True:
         newCard = getRandomCard("crupier")
@@ -221,7 +224,7 @@ def checkBlackjack(playerScore):
                 # ganarApuesta - manejo de dinero
                 break
 
-    return helpers.returnToMainMenu()
+    stayPlayingOrReturn()
 
 
 def getCardValues(cards):
@@ -241,8 +244,22 @@ def getCardValues(cards):
     return values
 
 
-# def checkCrupierBlackjack():
-#   global crupierCards
+def stayPlayingOrReturn():
+    print("\n¿Desea volver a jugar Blackjack?")
+    print("1) Sí")
+    print("2) No")
+
+    while True:
+        option = input(">>> ")
+        if (option == "1" or option == "2"):
+            break
+        else:
+            print("Opción inválida, reintente...")
+
+    if option == "1":
+        start()
+    else:
+        helpers.start()
 
 
 def menu():
