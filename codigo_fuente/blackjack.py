@@ -71,10 +71,10 @@ def assignCards():
     # askToDobuleBet
     arePlayerCardsEqual = playerCards[0] == playerCards[1]
     # if (arePlayerCardsEqual):
-    askToDivideCards()
+    askToDivideCards()  # Para dividir deben ser cartas de igual valor
 
     checkPlayerBlackjack()
-    blackjackMenu()
+    menu()
 
 
 def getRandomCard(user):
@@ -133,7 +133,12 @@ def askToDobuleBet():
     print("pendiente")
 
 
+hasDividedCards = False
+
+
 def askToDivideCards():
+    global hasDividedCards
+
     print("Obtuvo 2 cartas iguales, ¿Desea dividir?")
     print("1) Sí")
     print("2) No")
@@ -147,6 +152,7 @@ def askToDivideCards():
         print("\nOpción inválida, reintente...")
 
     if option == "1":
+        hasDividedCards = True
         divideCards()
 
 
@@ -198,5 +204,87 @@ def getCardValues(cards):
 #   global crupierCards
 
 
-def blackjackMenu():
+def menu():
+    printMenu()
+    option = getMenuOption()
+    handleMenuOption(option)
+
+
+def printMenu():
+    print("\nMenú de juego")
+    print("1) Pedir Carta")
+    print("2) Quedarse")
+    print("3) Consultar mis Cartas")
+    print("4) Consultar carta del Crupier")
+
+
+def getMenuOption():
+    while True:
+        option = input(">>> ")
+        if isValidMenuOption(option):
+            break
+
+    return option
+
+
+def isValidMenuOption(option):
+    validOptions = ["1", "2", "3", "4"]
+
+    isValidOption = option in validOptions
+    return isValidOption
+
+
+def handleMenuOption(option):
+    if option == "1":
+        requestNewCard()
+    elif option == "2":
+        stand()
+    elif option == "3":
+        printPlayerCards()
+    elif option == "4":
+        printCrupierCards()
+
+
+def requestNewCard():
+    global hasDividedCards
+
+
+def stand():
     print("pendiente")
+
+
+def printPlayerCards():
+    global hasDividedCards
+
+    print("\nMis cartas")
+    if hasDividedCards:
+        printTwoHands()
+    else:
+        printTheOnlyHand()
+
+
+def printTheOnlyHand():
+    global playerCards
+    for i in range(len(playerCards)):
+        print(playerCards[i])
+
+
+def printTwoHands():
+    global playerCards
+    for i in range(len(playerCards)):
+        print(f"\nCartas de la mano {i + 1}:")
+        for j in range(len(playerCards[i])):
+            print(playerCards[i][j])
+
+
+def printCrupierCards():
+    global crupierCards
+
+    print("\nCartas del Crupier")
+    for i in range(len(crupierCards)):
+        isFirstCard = i == 0
+        if isFirstCard:
+            print("La primer carta del crupier está oculta.")
+            continue
+
+        print(crupierCards[i])
