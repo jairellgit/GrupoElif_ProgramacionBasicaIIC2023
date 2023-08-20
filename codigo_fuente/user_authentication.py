@@ -2,15 +2,8 @@ import helpers
 import getpass
 import os
 
-#Cuando se valide que existe el usuario, aqui se van a traer los valores del usuario (id, pin, nombre del usuario y dinero depositado). Para guardarlos en una lista
-userIdTxt =  "jai123" #Dato temporal
-userNameTxt = "Jairell" #Dato temporal
-userMoneyTxt = 10000 #Dato temporal
-userPinTxt = 123456 #Dato de prueba
-
 
 def printMenu():
-
     print("\nMenú Opciones:")
     print("1) Retirar Dinero")
     print("2) Depositar Dinero")
@@ -20,48 +13,68 @@ def printMenu():
     print("6) Salir")
 
 
+# Inicio de sesión
 def login():
-    userIdAttempts = 0
-    userPinAttempts = 0
-    totalValidAttempts = 3
+    userIdAttempts = 0 # Contador intentos para insertar id
+    userPinAttempts = 0 # Contador intentos para insertar pin
+    totalValidAttempts = 3 # Intentos disponibles
 
-    #userIdTxt es la futura variable que va a contener el dato que venga de la base de datos (txt)
-    while (userIdAttempts != 3):
-        #En un futuro, esta variable se tiene enviar a la base de datos (txt), para validar que exista este usuario
-        userId = input("Ingrese su ID (Usar: jai123):\n> ")
+    while userIdAttempts < totalValidAttempts:
+        userId = input("Ingrese su ID: ")
 
-        if (userId == userIdTxt):
-
-            while (userPinAttempts != 3):
-                userPin = int(getpass.getpass("Digite su PIN (Usar: 123456):\n> "))
-                #userPinTxt es la futura variable que va a contener el dato que venga de la base de datos (txt)
-                if(userPin == userPinTxt):
-                    menuCasino()
-                    return userId, userPin, userNameTxt, userMoneyTxt
+        if isUserExists(userId): # Va a validar que el usuario exista
+            userPinTxt = getUserPin(userId)
+            while userPinAttempts < totalValidAttempts:
+                userPin = int(getpass.getpass("Digite su PIN: "))
+                if userPin == userPinTxt:
+                    id, pin, name = getUserInfo(userId)
+                    menuCasino(id, pin, name)
+                    return
                 else:
                     userPinAttempts += 1
-
-                    if (userPinAttempts == totalValidAttempts):
-                        print(f"\nHa excedido el máximo de {totalValidAttempts} intentos para iniciar sesión, volviendo al menú principal...")
-                        helpers.returnToMainMenu()
-                    else:
-                        attemptsLeft = 3 - userPinAttempts
-                        print(">>> El dato ingresado no es válido. Le quedan "+str(attemptsLeft)+" intentos.") 
-
+                    attemptsLeft = totalValidAttempts - userPinAttempts
+                    print(f">>> El dato ingresado no es válido. Le quedan {attemptsLeft} intentos.")
+            else:
+                print(f"\n>>> Ha excedido el máximo de {totalValidAttempts} intentos para el PIN, volviendo al menú principal...")
+                helpers.returnToMainMenu()
         else:
             userIdAttempts += 1
-
-            if (userIdAttempts == totalValidAttempts):
-                print(f"\nHa excedido el máximo de {totalValidAttempts} intentos para iniciar sesión, volviendo al menú principal...")
-                helpers.returnToMainMenu()
-            else:
-                attemptsLeft = 3 - userIdAttempts
-                print(">>> El dato ingresado no es válido. Le quedan "+str(attemptsLeft)+" intentos.")
-                
-
-def menuCasino():
-    print("\n♦♦♦ Hola "+userNameTxt+", ¡bienvenido/a al Dreamworld Casino! ♦♦♦")
+            attemptsLeft = totalValidAttempts - userIdAttempts
+            print(f">>> El dato ingresado no es válido. Le quedan {attemptsLeft} intentos.")
     
+    print(f"\n>>> Ha excedido el máximo de {totalValidAttempts} intentos para iniciar sesión, volviendo al menú principal...")
+
+
+# Valida que el usuario exista
+def isUserExists(userId):
+    return os.path.exists(f"users/{userId}")
+
+
+# Obtiene el PIN del usuario
+def getUserPin(userId):
+    with open("usuarios_pines.txt", "r") as file:
+        lines = file.readlines()
+        index = lines.index(userId + "\n")
+        return int(lines[index + 2])
+
+
+# Obtiene toda la informarción del usuario en base al ID 
+def getUserInfo(userId):
+    with open("usuarios_pines.txt", "r") as file:
+        lines = file.readlines()
+        index = lines.index(userId + "\n")
+
+        id = lines[index].strip() # Obtener usuario (ID)
+        name = lines[index + 1].strip() # Obtener nombre
+        pin = int(lines[index + 2])  # Obtener PIN
+
+        return id, pin, name
+
+
+# >>> Menú Principal después de iniciar sesión
+def menuCasino(id, pin, name):
+    print("\n♦♦♦ Hola "+name+", ¡bienvenido/a al Dreamworld Casino! ♦♦♦")
+
     while True:
 
         printMenu()
@@ -82,7 +95,3 @@ def menuCasino():
             helpers.returnToMainMenu()
         else:
             print("\n>>> Opción no válida. Inténtelo nuevamente\n")
-
-
-def isUserExists(userId):
-    return os.path.exists(f"users/{userId}")

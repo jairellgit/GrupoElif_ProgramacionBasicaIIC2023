@@ -2,7 +2,7 @@ import getpass
 import helpers 
 import os
 
-# Variables de ámbito global
+# >>> Variables 
 userInfo = []
 userIdAttempts = 0
 
@@ -17,12 +17,6 @@ minMoneyDolar = float(arrayTipoCambio[0]) #El primer dato del archivo de Conf Av
 minMoneyColon = float(arrayTipoCambio[1]) * minMoneyDolar #El dato del archivo Conf Avanza es el valor de 1 dolar a colones
 minMoneyBitcoin = float(arrayTipoCambio[2]) * minMoneyDolar #El dato del archivo Conf Avanza es el valor de 1 dolar a bitcoins
 
-
-# >>> Escogencia de nombre de usuario
-# Solicitar al usuario que cree su nombre de usuario
-def getUsername():
-    username = input("Ingrese su nombre de usuario: \n> ")
-    return username
 
 # >>> Escogencia de ID
 # Solicitar al usuario que cree su ID
@@ -203,12 +197,13 @@ def setCredentials():
     global userInfo
 
     userId = userInfo[0]
+    userName = userInfo[1]
     userPin = userInfo[2]
     credentialsPath = "usuarios_pines.txt"
 
     appendMode = 'a'
     with open(credentialsPath, appendMode) as credentialsFile:
-        credentialsFile.write(f"{userId}\n{userPin}\n")
+        credentialsFile.write(f"{userId}\n{userName}\n{userPin}\n")
 
 
 def setDepositMoney():
@@ -228,20 +223,6 @@ def setDepositMoney():
 
 
 def addRegistration():
-    #depositMoney = 0
-    #depositAttempts = 0
-
-    #print("\n♦ Registro de nuevo usuario")
-
-    #userId = getUserId() # Punto 1
-    #userName = input("Ingrese su nombre: \n> ") # Punto 2
-    #userPin = getUserPin() # Punto 3
-    #userDeposit, flagDeposit = getDeposit(depositMoney, depositAttempts) # Punto 4
-
-    #if (flagDeposit == True):
-        # Punto 5 pendiente acá, usar las variables y el depositMoney para guardar los datos del usuario.
-        #print(f"Testing: Usuario(ID) {userId}, Nombre {userName}, Pin {userPin}, Deposit {userDeposit}") #Linea de prueba
-        #helpers.returnToMainMenu() # Punto 6 (Salir al menú principal)
     setDepositMoney()
     setCredentials()
 
@@ -249,7 +230,7 @@ def addRegistration():
 # >>> Métodos principales del módulo
 def getUserInfo():
     userId = getUserId()  # Punto 1
-    userName = getUsername()  # Punto 2
+    userName = input("Ingrese su nombre: \n> ")  # Punto 2
     userPin = getUserPin()  # Punto 3
 
     userInfo = [userId, userName, userPin]
@@ -257,6 +238,8 @@ def getUserInfo():
 
 
 def startUserRegistration():
+    depositMoney = 0
+    depositAttempts = 0
     global userInfo
 
     print("\n♦ Registro de nuevo usuario")
