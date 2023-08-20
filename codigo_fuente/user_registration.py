@@ -203,12 +203,13 @@ def setCredentials():
     global userInfo
 
     userId = userInfo[0]
+    userName = userInfo[1]
     userPin = userInfo[2]
     credentialsPath = "usuarios_pines.txt"
 
     appendMode = 'a'
     with open(credentialsPath, appendMode) as credentialsFile:
-        credentialsFile.write(f"{userId}\n{userPin}\n")
+        credentialsFile.write(f"{userId}\n{userName}\n{userPin}\n")
 
 
 def setDepositMoney():
@@ -228,20 +229,6 @@ def setDepositMoney():
 
 
 def addRegistration():
-    #depositMoney = 0
-    #depositAttempts = 0
-
-    #print("\n♦ Registro de nuevo usuario")
-
-    #userId = getUserId() # Punto 1
-    #userName = input("Ingrese su nombre: \n> ") # Punto 2
-    #userPin = getUserPin() # Punto 3
-    #userDeposit, flagDeposit = getDeposit(depositMoney, depositAttempts) # Punto 4
-
-    #if (flagDeposit == True):
-        # Punto 5 pendiente acá, usar las variables y el depositMoney para guardar los datos del usuario.
-        #print(f"Testing: Usuario(ID) {userId}, Nombre {userName}, Pin {userPin}, Deposit {userDeposit}") #Linea de prueba
-        #helpers.returnToMainMenu() # Punto 6 (Salir al menú principal)
     setDepositMoney()
     setCredentials()
 
@@ -257,11 +244,13 @@ def getUserInfo():
 
 
 def startUserRegistration():
+    depositMoney = 0
+    depositAttempts = 0
     global userInfo
 
     print("\n♦ Registro de nuevo usuario")
 
     userInfo = getUserInfo()  # Engloba puntos 1, 2 y 3
-    userInfo.append(getDeposit())  # Punto 4
+    userInfo.append(getDeposit(depositMoney, depositAttempts)) # Punto 4
     addRegistration()  # Punto 5
     helpers.returnToMainMenu()  # Punto 6
