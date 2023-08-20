@@ -2,7 +2,7 @@ import getpass
 import helpers 
 import os
 
-# Variables de ámbito global
+# >>> Variables 
 userInfo = []
 userIdAttempts = 0
 
@@ -17,12 +17,6 @@ minMoneyDolar = float(arrayTipoCambio[0]) #El primer dato del archivo de Conf Av
 minMoneyColon = float(arrayTipoCambio[1]) * minMoneyDolar #El dato del archivo Conf Avanza es el valor de 1 dolar a colones
 minMoneyBitcoin = float(arrayTipoCambio[2]) * minMoneyDolar #El dato del archivo Conf Avanza es el valor de 1 dolar a bitcoins
 
-
-# >>> Escogencia de nombre de usuario
-# Solicitar al usuario que cree su nombre de usuario
-def getUsername():
-    username = input("Ingrese su nombre de usuario: \n> ")
-    return username
 
 # >>> Escogencia de ID
 # Solicitar al usuario que cree su ID
@@ -236,7 +230,7 @@ def addRegistration():
 # >>> Métodos principales del módulo
 def getUserInfo():
     userId = getUserId()  # Punto 1
-    userName = getUsername()  # Punto 2
+    userName = input("Ingrese su nombre: \n> ")  # Punto 2
     userPin = getUserPin()  # Punto 3
 
     userInfo = [userId, userName, userPin]
