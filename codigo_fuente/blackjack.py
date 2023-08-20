@@ -1,4 +1,5 @@
 import random
+import helpers
 
 
 def start():
@@ -84,6 +85,7 @@ def getRandomCard(user):
 
     randomValue = random.randint(0, len(cardValues) - 1)
     cardValue = cardValues[randomValue]
+
     if (cardValue == "As" and user == "player"):
         cardValue = f"{getAsCardValue()} (As)"
     elif (cardValue == "As" and user == "crupier"):
@@ -166,21 +168,60 @@ def divideCards():
     playerCards = [[playerCards[0]], [playerCards[1]]]
 
 
-def checkPlayerBlackjack():
-    global playerCards
+def checkScore(playerHand):
+    playerScore = sum(getCardValues(playerHand))
+    blackjack = 21
 
-    values = getCardValues(playerCards)
-    sumValues = sum(values)
+    if playerScore >= blackjack:
+        checkBlackjack(playerScore)
 
-    if sumValues == 21:
-        print("pendiente")
-        print(f"\nSuma {sumValues}, ¡Ha ganado!")
-        # verificar empate con el crupier
-        # jugador gana la apuesta
-    elif sumValues > 21:
-        print("pendiente")
-        print(f"\nSuma {sumValues}, ha perdido.")
-        # jugador pierde la apuesta
+
+def checkBlackjack(playerScore):
+    global crupierCards
+    global hasDividedCards
+
+    blackjack = 21
+    crupierScore = sum(getCardValues(crupierCards))
+
+    print(f"Tu puntuación es de {playerScore}")
+    if (playerScore > blackjack):
+        print(
+            f"\nPuntuación por encima de {blackjack}... Ha perdido su apuesta.")
+        # Manejo de dinero, perdió su apuesta
+        return helpers.returnToMainMenu()
+
+    while True:
+        newCard = getRandomCard("crupier")
+        crupierCards.append(newCard)
+        print(f"El crupier saca un {newCard}")
+
+        lastCardValue = getCardValues(crupierCards)[-1]
+        crupierScore += lastCardValue
+        print(f"Puntuación del crupier: {crupierScore}")
+
+        if crupierScore >= playerScore:
+            if (playerScore == crupierScore):
+                print("\n¡Es un empate! No ganas ni pierdes la apuesta.")
+                break
+
+            elif (crupierScore > blackjack):
+                print("\n¡Ganaste! El crupier se pasó de 21")
+                # ganarApuesta - manejo de dinero
+                break
+
+            elif (crupierScore > playerScore):
+                print(
+                    f"\nPerdiste... El crupier sacó {crupierScore} y tú {playerScore}")
+                # perderApuesta - manejo de dinero
+                break
+
+            elif (crupierScore < playerScore):
+                print(
+                    f"\n¡Ganaste! El crupier sacó {crupierScore} y tú {playerScore}")
+                # ganarApuesta - manejo de dinero
+                break
+
+    return helpers.returnToMainMenu()
 
 
 def getCardValues(cards):
@@ -213,7 +254,7 @@ def menu():
 def printMenu():
     print("\nMenú de juego")
     print("1) Pedir Carta")
-    print("2) Quedarse")
+    print("2) Deseo parar")
     print("3) Consultar mis Cartas")
     print("4) Consultar carta del Crupier")
 
@@ -223,6 +264,7 @@ def getMenuOption():
         option = input(">>> ")
         if isValidMenuOption(option):
             break
+        print("Opción inválida, reintente...")
 
     return option
 
@@ -247,10 +289,60 @@ def handleMenuOption(option):
 
 def requestNewCard():
     global hasDividedCards
+    global playerCards
+
+    if hasDividedCards:
+        playerHand = getHand()
+        addNewCardToHand(playerHand)
+        checkScore(playerHand)
+    else:
+        addNewCardToHand(playerCards)
+        checkScore(playerHand)
+
+    menu()
+
+
+def getHand():
+    global playerCards
+
+    print("¿A cuál mano desea agregar una nueva carta?")
+    print("1) Mano 1")
+    print("2) Mano 2")
+    option = getHandOption()
+
+    return playerCards[option - 1]
+
+
+def getHandOption():
+    while True:
+        option = input(">>> ")
+
+        if isValidHandOption(option):
+            break
+
+        print("Opción inválida, reintente...")
+
+    return option
+
+
+def isValidHandOption(option):
+    return option == "1" or option == "2"
+
+
+def addNewCardToHand(playerHand):
+    newCard = getRandomCard("player")
+    playerHand.append(newCard)
+
+    print(f"\nHa obtenido un {newCard}")
 
 
 def stand():
-    print("pendiente")
+    global hasDividedCards
+    global playerCards
+
+    playerScore = sum(getCardValues(playerCards))
+
+    checkBlackjack(playerScore)
 
 
 def printPlayerCards():
@@ -268,6 +360,8 @@ def printTheOnlyHand():
     for i in range(len(playerCards)):
         print(playerCards[i])
 
+    menu()
+
 
 def printTwoHands():
     global playerCards
@@ -275,6 +369,8 @@ def printTwoHands():
         print(f"\nCartas de la mano {i + 1}:")
         for j in range(len(playerCards[i])):
             print(playerCards[i][j])
+
+    menu()
 
 
 def printCrupierCards():
@@ -288,3 +384,5 @@ def printCrupierCards():
             continue
 
         print(crupierCards[i])
+
+    menu()
