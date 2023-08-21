@@ -83,10 +83,8 @@ def assignCards():
             print("La primer carta del crupier esta oculta.")
 
     # askToDobuleBet
-    # playerCards = ["10 de Rombos Rojo", "10 de Rombos Rojo"]
 
-    arePlayerCardsEqual = playerCards[0] == playerCards[1]
-    if (arePlayerCardsEqual):
+    if (arePlayerCardsEqual(playerCards)):
         askToDivideCards()
 
     if not hasDividedCards:
@@ -114,12 +112,14 @@ def getRandomCard(user):
     cardType = cardTypes[randomType]
 
     cardColor = None
+
     if ((cardType == "Corazones") or (cardType == "Rombos")):
         cardColor = "Rojo"
     elif ((cardType == "Tréboles") or (cardType == "Picas")):
         cardColor = "Negro"
 
     randomCard = f"{cardValue} de {cardType} {cardColor}"
+
     return randomCard
 
 
@@ -148,6 +148,12 @@ def isValidAsCardOption(asCardOption):
     return (asCardOption == "1") or (asCardOption == "2")
 
 
+def arePlayerCardsEqual(playerCards):
+    values = getCardValues(playerCards)
+
+    return values[0] == values[1]
+
+
 def askToDobuleBet():
     print("pendiente")
 
@@ -158,7 +164,7 @@ hasDividedCards = False
 def askToDivideCards():
     global hasDividedCards
 
-    print("\nObtuvo 2 cartas iguales, ¿Desea dividir?")
+    print("\nObtuvo 2 cartas de igual valor, ¿Desea dividir en dos manos?")
     print("1) Sí")
     print("2) No")
 
@@ -458,6 +464,3 @@ def printCrupierCards():
         print(crupierCards[i])
 
     menu()
-
-
-start()
