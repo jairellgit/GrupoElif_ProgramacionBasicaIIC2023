@@ -1,29 +1,51 @@
 import random
 import helpers
+import user_authentication
+import menu_casino
+
+userId
+userPin
+userName
+amountToBet
+playerMoney
+
+arrayConfigAvanzada = helpers.confAvanzada()
 
 
-def start():
-    resetGlobalValues()
+def start(id, pin, name):
+    resetGlobalValues(id, pin, name)
     showInstructions()
 
-    # amountToBet = getAmountToBet()
-    # setAmountToBet(amountToBet)
+    amountToBetHandle()
 
     play()
 
 
-def resetGlobalValues():
+def resetGlobalValues(id, pin, name):
     global playerCards
     global crupierCards
     global hasDividedCards
+    global userId
+    global userPin
+    global userName
+    global amountToBet
+    global playerMoney
 
     playerCards = []
     crupierCards = []
     hasDividedCards = False
+    userId = id
+    userPin = pin
+    userName = name
+    amountToBet = 0
+    playerMoney = menu_casino.getMoney(userId)
 
 
 def showInstructions():
-    print("\nInstrucciones Blackjack")
+    global userName
+
+    print(f"\n♦ ¡Bienvenido al Blackjack {userName}! ♦")
+    print("Estas son las reglas del juego:")
     print("1. El objetivo es sumar los valores de las cartas para acercarse a 21, si se pasa de 21 pierde.")
     print("2. Las cartas con número valen ese número, las cartas J, Q, K valen 10, y el As puede valer 1 u 11, usted decide.")
     print("3. El crupier le dará dos cartas visibles, y él tendrá una carta visible y otra oculta.")
@@ -34,11 +56,15 @@ def showInstructions():
     print("8. Existe el empate, y si usted o el crupier se pasan de 21 pierden.")
 
 
+def amountToBetHandle():
+    global amountToBet
+
+    amountToBet = getAmountToBet()
+    checkAmountToBet(amountToBet)
+
+
 def getAmountToBet():
     amountToBet = getValidAmountFormat()
-    # getMinAmountToBet()
-    # getPlayerMoney()
-    # hasPlayerEnoughMoney(amountToBet, playerMoney)
 
     return amountToBet
 
@@ -48,12 +74,44 @@ def getValidAmountFormat():
 
     while True:
         try:
-            amountToBet = int(input("\nIngrese su apuesta: "))
+            amountToBet = float(input("\nIngrese su apuesta: "))
             break
         except ValueError:
             print("\n>>> Sólo se admiten números.")
 
     return amountToBet
+
+
+def checkAmountToBet(amountToBet):
+    global arrayConfigAvanzada
+    global amountToBet
+    global userId
+    global playerMoney
+
+    minAmountToBet = float(arrayConfigAvanzada[4])
+
+    print(f"\nSu saldo actual es de: {playerMoney}")
+
+    if not hasPlayerEnoughMoney(amountToBet, playerMoney):
+        print(
+            f"\nNo puede apostar ${amountToBet}, ya que su saldo es de: {playerMoney}")
+        print("Porfavor reintente")
+        amountToBetHandle()
+
+    if amountToBet < minAmountToBet:
+        print(
+            f"\nNo puede apostar ${amountToBet}, ya que el mínimo son ${minAmountToBet}")
+        print("Porfavor reintente")
+        amountToBetHandle()
+
+    if minAmountToBet > playerMoney:
+        print(f"\nNo tiene suficiente saldo... el mínimo es: {minAmountToBet}")
+        print("Volviendo al submenú de juegos...")
+        user_authentication.menuCasino(userId, userPin, userName)
+
+
+def hasPlayerEnoughMoney(amountToBet, playerMoney):
+    return amountToBet < playerMoney
 
 
 def play():
@@ -207,7 +265,7 @@ def checkBlackjack(playerHand):
     crupierScore = sum(getCardValues(crupierCards))
     playerScore = sum(getCardValues(playerHand))
 
-    print("\n=======================")
+    print("\n♦ Resultados ♦")
     print(f"Tu puntuación es de {playerScore}")
 
     if (playerScore > blackjack):
@@ -303,6 +361,10 @@ def removeHand(playerHand):
 
 
 def stayPlayingOrReturn():
+    global userId
+    global userPin
+    global userName
+
     print("\n¿Desea volver a jugar Blackjack?")
     print("1) Sí")
     print("2) No")
@@ -317,7 +379,7 @@ def stayPlayingOrReturn():
     if option == "1":
         start()
     else:
-        helpers.returnToMainMenu()
+        user_authentication.menuCasino(userId, userPin, userName)
 
 
 def menu():
@@ -327,7 +389,9 @@ def menu():
 
 
 def printMenu():
-    print("\nMenú de juego")
+    global playerMoney
+
+    print(f"\n♦ Menú del Blackjack ♦ (Saldo actual: {playerMoney})")
     print("1) Pedir Carta")
     print("2) Deseo parar")
     print("3) Consultar mis Cartas")
