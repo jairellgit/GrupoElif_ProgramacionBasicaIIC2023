@@ -1,5 +1,5 @@
 from menu import runMainMenu
-from user_registration import addRegistration
+from user_registration import startUserRegistration
 from user_authentication import login
 
 
@@ -7,7 +7,7 @@ def start():
     menuOption = runMainMenu()
 
     if menuOption == 1:
-        addRegistration()
+        startUserRegistration()
     elif menuOption == 2:
         login()
     elif menuOption == 3:

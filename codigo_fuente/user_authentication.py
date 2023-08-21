@@ -5,6 +5,7 @@ import os
 import slots
 
 
+
 def printMenu():
     print("\nMenú Opciones:")
     print("1) Retirar Dinero")
@@ -79,7 +80,7 @@ def menuCasino(id, pin, name):
     while True:
 
         printMenu()
-        option = int(input("Digite la opcion que desee realizar:\n>"))
+        option = int(input("\nDigite la opcion que desee realizar:\n>"))
 
         if(option == 1):
             print("\n♦ Retirar Dinero")
@@ -88,7 +89,9 @@ def menuCasino(id, pin, name):
             print("\n♦ Depositar Dinero")
             menu_casino.depositMoney(id)
         elif(option == 3):
-            print("\n>>> La opción seleccionada no se encuentra en funcionamiento aún.\n")
+            print("\n♦ Saldo Actual")
+            balance = menu_casino.getMoney(id)
+            print(f">>> Saldo actual: ${balance:.4f}")
         elif(option == 4):
             print("\nMenú Juegos:")
             print("1) Blackjack")
@@ -101,7 +104,8 @@ def menuCasino(id, pin, name):
             else:
                 print("\n>>> Opción no válida. Inténtelo nuevamente\n")
         elif(option == 5):
-            print("\n>>> La opción seleccionada no se encuentra en funcionamiento aún.\n")
+            print("\n♦ Eliminar Usuario")
+            menu_casino.deleteUser(id, pin, name)
         elif(option == 6):
             print("\n>>> Saliendo al menú principal...\n")
             helpers.returnToMainMenu()
