@@ -2,8 +2,6 @@ import helpers
 import getpass
 import os
 
-arrayTipoCambio = helpers.tipoDeCambio()
-
 
 # >>> Consultar saldo actual
 def getMoneyPath(id):
@@ -115,7 +113,7 @@ def depositMoney(id):
 
 # >>> Eliminar usuario
 
-# Función para eliminar un usuario
+# Función para eliminar un usuario (en progreso)
 def deleteUser(id, pin, name):
     print("Por favor, ingrese su PIN para confirmar la eliminación de su cuenta:")
     userPin = int(getpass.getpass("PIN: "))
@@ -144,12 +142,12 @@ def deleteUser(id, pin, name):
                         for line in linesSafe:
                             file.write(line) # Escribe cada línea en el archivo, reemplazando el contenido original
 
-                    print("¡Su cuenta ha sido eliminada exitosamente!")
+                    print(">>> ¡Su cuenta ha sido eliminada exitosamente!")
                     return True
                 except ValueError:
                     print(f"{ValueError}")
         else:
-            print("No puede eliminar su cuenta si tiene dinero disponible. Por favor, retire o juegue su saldo antes.")
+            print(">>> No puede eliminar su cuenta si tiene dinero disponible. Por favor, retire o juegue su saldo antes.")
     else:
-        print("El PIN ingresado no coincide. Operación de eliminación cancelada.")
+        print(">>> El PIN ingresado no coincide. Operación de eliminación cancelada.")
     return
