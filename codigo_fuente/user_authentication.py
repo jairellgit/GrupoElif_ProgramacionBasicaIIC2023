@@ -2,8 +2,6 @@ import helpers
 import menu_casino
 import getpass
 import os
-import slots
-
 
 
 def printMenu():
@@ -93,16 +91,7 @@ def menuCasino(id, pin, name):
             balance = menu_casino.getMoney(id)
             print(f">>> Saldo actual: ${balance:.4f}")
         elif(option == 4):
-            print("\nMenú Juegos:")
-            print("1) Blackjack")
-            print("2) Tragamonedas")
-            gameOption = int(input("Digite el juego que desee:\n>"))
-            if(gameOption == 1):
-                print("\n>>> La opción seleccionada no se encuentra en funcionamiento aún.\n")
-            elif(gameOption == 2):
-                slots.start(id,pin,name)
-            else:
-                print("\n>>> Opción no válida. Inténtelo nuevamente\n")
+            print("\n>>> La opción seleccionada no se encuentra en funcionamiento aún.\n")
         elif(option == 5):
             print("\n♦ Eliminar Usuario")
             menu_casino.deleteUser(id, pin, name)
