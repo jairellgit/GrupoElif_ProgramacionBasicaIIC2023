@@ -99,46 +99,13 @@ def getUserPin():
 
 
 # >>> Depositar el dinero
-# Menú opciones deposito
-def printMenuMoneyType():
 
+# Menú opciones deposito
+def printMenuMoneyType(id):
     print("\nDepósito:")
     print("1) Colones")
     print("2) Dólares")
     print("3) Bitcoin")
-
-
-# Contador de intentos
-def attemptsDeposit(depositMoney, depositAttempts, type):
-    minimo = 0
-    if (type == 1):
-        minimo = minMoneyColon
-    elif (type == 2):
-        minimo = minMoneyDolar
-    elif (type == 3):
-        minimo = minMoneyBitcoin
-        
-    if(depositMoney >= minMoneyDolar):
-        print("\n>>> Deposito realizado con éxito. ¡Registro de usuario completado!")
-        flagDeposit = True
-        return depositMoney, 3, flagDeposit
-    else: 
-        totalDepositValidAttempts = 3
-        depositAttempts += 1
-
-        if (depositAttempts == totalDepositValidAttempts):
-            print(f"\nHa excedido el máximo de {totalDepositValidAttempts} intentos para realizar el depósito, volviendo al menú principal...")
-            helpers.returnToMainMenu()
-        else:
-            attemptsLeft = 3 - depositAttempts
-            if (type == 1): #Colones
-                print("\n>>> El monto ingresado no es válido, debe equivaler mínimo a ₡"+str(minMoneyColon)+". Le quedan "+str(attemptsLeft)+" intentos.") 
-            elif (type == 2): #Dolares
-                print("\n>>> El monto ingresado no es válido, debe equivaler mínimo a $"+str(minMoneyDolar)+". Le quedan "+str(attemptsLeft)+" intentos.") 
-            elif (type == 3): #Bitcoin
-                print("\n>>> El monto ingresado no es válido, debe equivaler mínimo a ₿"+str(minMoneyBitcoin)+". Le quedan "+str(attemptsLeft)+" intentos.") 
-
-        return depositMoney, depositAttempts, False
 
 
 # Convertir el dinero
@@ -157,39 +124,50 @@ def convertMoney(depositMoney, moneyType):
     return ConvDepositMoney
 
 
+# Dinero minimo para cada tipo de moneda
+def getMinMoney(moneyType):
+    minMoneyDolar = float(arrayTipoCambio[0]) #El primer dato del archivo de Conf Avanzada es el monto mínimo de deposito requerido en dolares
+    minMoneyColon = float(arrayTipoCambio[1]) * minMoneyDolar #El dato del archivo Conf Avanza es el valor de 1 dolar a colones
+    minMoneyBitcoin = float(arrayTipoCambio[2]) * minMoneyDolar #El dato del archivo Conf Avanza es el valor de 1 dolar a bitcoins
+    
+    dictionayMinMoneyValues = {
+        1: minMoneyColon,
+        2: minMoneyDolar,
+        3: minMoneyBitcoin
+    }
+    return dictionayMinMoneyValues.get(moneyType, 0)
+
+
+# Realizar deposito
+def processDeposit(id, moneyType):
+    minMoney = getMinMoney(moneyType)
+
+    depositAttempts = 0
+    while depositAttempts < 3:
+        depositMoney = float(input(f"Ingrese el monto a depositar (mínimo {getMinMoney(moneyType)}): \n>"))
+        if depositMoney >= minMoney:
+            try:    
+                convertedMoney = convertMoney(depositMoney, moneyType)
+                print(f"\n>>> Deposito realizado con éxito. ¡Registro de usuario completado!")  
+                return convertedMoney
+            except ValueError:
+                print("\n>>> Ingrese solo números.")
+        else:
+            depositAttempts += 1
+            attemptsLeft = 3 - depositAttempts
+            print(f"\n>>> El monto ingresado no es válido, debe equivaler mínimo a {minMoney}. Le quedan {attemptsLeft} intentos.")
+    
+    if (depositAttempts == 3):
+        print(">>> Ha excedido el máximo de intentos para realizar el depósito, volviendo al menú principal...")
+        helpers.returnToMainMenu()
+
+
 # Función general para el deposito
-def getDeposit(depositMoney, depositAttempts): 
-    flagDeposit = False
+def depositMoney(id):
+    printMenuMoneyType(id)
+    moneyType = int(input("Digite el número de opción correspondiente al tipo de moneda que desea depositar: \n> "))
 
-    while (depositAttempts != 3):
-        try:
-            printMenuMoneyType()
-            moneyType = int(input(f"Digite el número de opción correspondiente al tipo de moneda que desea depositar: \n> "))
-
-            #Se le indica el monto mínimo según la opción elegida 
-            if moneyType == 1: #Colones
-                depositMoney = float(input(f"Ingrese el monto a depositar para finalizar (mínimo ₡{minMoneyColon}): \n> "))
-                depositMoneyConverted = convertMoney(depositMoney, moneyType)
-                print("Dinero a doláres: "+ str(depositMoneyConverted))
-                depositMoney, depositAttempts, flagDeposit = attemptsDeposit(depositMoneyConverted, depositAttempts, 1)
-
-            elif moneyType == 2: #Dólares
-                depositMoney = float(input(f"Ingrese el monto a depositar para finalizar (mínimo ${minMoneyDolar}): \n> "))
-                depositMoneyConverted = convertMoney(depositMoney, moneyType)
-                print("Dinero a doláres: "+ str(depositMoneyConverted))
-                depositMoney, depositAttempts, flagDeposit = attemptsDeposit(depositMoneyConverted, depositAttempts, 2)
-
-            elif moneyType == 3: #Bitcoin
-                depositMoney = float(input(f"Ingrese el monto a depositar para finalizar (mínimo ₿{minMoneyBitcoin}): \n> "))
-                depositMoneyConverted = convertMoney(depositMoney, moneyType)
-                print("Dinero a doláres: "+ str(depositMoneyConverted))
-                depositMoney, depositAttempts, flagDeposit = attemptsDeposit(depositMoneyConverted, depositAttempts, 3)
-
-            else:
-                print("\n>>> Opción no válida. Inténtelo nuevamente")
-        except ValueError:
-            print("\n>>> Ingrese solo números.")
-    return depositMoney, flagDeposit
+    return processDeposit(id, moneyType)
 
   
 # >>> Guardado de información del usuario
@@ -238,13 +216,11 @@ def getUserInfo():
 
 
 def startUserRegistration():
-    depositMoney = 0
-    depositAttempts = 0
     global userInfo
 
     print("\n♦ Registro de nuevo usuario")
 
     userInfo = getUserInfo()  # Engloba puntos 1, 2 y 3
-    userInfo.append(getDeposit(depositMoney, depositAttempts)) # Punto 4
+    userInfo.append(depositMoney(userInfo[0])) # Punto 4
     addRegistration()  # Punto 5
     helpers.returnToMainMenu()  # Punto 6

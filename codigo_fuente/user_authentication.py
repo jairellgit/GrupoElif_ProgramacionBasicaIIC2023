@@ -1,4 +1,5 @@
 import helpers
+import menu_casino
 import getpass
 import os
 
@@ -29,7 +30,6 @@ def login():
                 if userPin == userPinTxt:
                     id, pin, name = getUserInfo(userId)
                     menuCasino(id, pin, name)
-                    return
                 else:
                     userPinAttempts += 1
                     attemptsLeft = totalValidAttempts - userPinAttempts
@@ -78,18 +78,23 @@ def menuCasino(id, pin, name):
     while True:
 
         printMenu()
-        option = int(input("Digite la opcion que desee realizar:\n>"))
+        option = int(input("\nDigite la opcion que desee realizar:\n>"))
 
         if(option == 1):
-            print("\n>>> La opción seleccionada no se encuentra en funcionamiento aún.\n")
+            print("\n♦ Retirar Dinero")
+            menu_casino.withdrawMoney(id)
         elif(option == 2):
-            print("\n>>> La opción seleccionada no se encuentra en funcionamiento aún.\n")
+            print("\n♦ Depositar Dinero")
+            menu_casino.depositMoney(id)
         elif(option == 3):
-            print("\n>>> La opción seleccionada no se encuentra en funcionamiento aún.\n")
+            print("\n♦ Saldo Actual")
+            balance = menu_casino.getMoney(id)
+            print(f">>> Saldo actual: ${balance:.4f}")
         elif(option == 4):
             print("\n>>> La opción seleccionada no se encuentra en funcionamiento aún.\n")
         elif(option == 5):
-            print("\n>>> La opción seleccionada no se encuentra en funcionamiento aún.\n")
+            print("\n♦ Eliminar Usuario")
+            menu_casino.deleteUser(id, pin, name)
         elif(option == 6):
             print("\n>>> Saliendo al menú principal...\n")
             helpers.returnToMainMenu()
