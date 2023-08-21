@@ -6,7 +6,7 @@ import time
 import user_authentication
 
 
-arrayConfigAvanzada = helpers.tipoDeCambio()
+arrayConfigAvanzada = helpers.confAvanzada()
 acumulate = float(arrayConfigAvanzada[3]) #El valor predefinido del acumulado del tragamonedas
 minBet = float(arrayConfigAvanzada[4]) #El valor minimo de apuesta que puede hacer el usuario
 
