@@ -1,6 +1,7 @@
 from menu import runMainMenu
 from user_registration import startUserRegistration
 from user_authentication import login
+from menu_conf_avanzada import authenticateAdvancedUser
 
 
 def start():
@@ -11,9 +12,7 @@ def start():
     elif menuOption == 2:
         login()
     elif menuOption == 3:
-        # Eliminar cuando ya esté listo:
-        print(">>> Opción no disponible aún. Regresando al menú principal...")
-        start()
+        authenticateAdvancedUser()
     elif menuOption == 4:
         print(">>> Saliendo al menú principal...")
         start()
