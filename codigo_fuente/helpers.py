@@ -7,7 +7,7 @@ def returnToMainMenu():
     start()
 
 # Obtener el tipo de cambio del archivo Configuración Avanzada
-def tipoDeCambio():
+def confAvanzada():
     fileConfiguracionAvanzada = "configuracion_avanzada.txt"
 
     # Abrir el archivo en modo lectura (r) y guardarlo en una variable usando 'with'
