@@ -2,8 +2,6 @@ import helpers
 import getpass
 import os
 
-arrayTipoCambio = helpers.tipoDeCambio()
-
 
 # >>> Consultar saldo actual
 def getMoneyPath(id):
