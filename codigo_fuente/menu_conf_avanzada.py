@@ -7,104 +7,134 @@ config_file = "configuracion_avanzada.txt"
 arrayConfAvanzada = helpers.confAvanzada()
 
 
-def passwordAdvancedConf():
-    filePinAdvanced = "usuarios_pines.txt"
+# Función para eliminar un usuario y su información
+def deleteUser(id):
+    userFolder = f"users/{id}"
+    
+    if os.path.exists(userFolder):
+        # Eliminar archivos y subcarpetas dentro de la carpeta del usuario
+        for item in os.listdir(userFolder):
+            item_path = os.path.join(userFolder, item)
+            if os.path.isdir(item_path):
+                try:
+                    os.rmdir(item_path)
+                except Exception as error:
+                    print(f"Error al eliminar la carpeta {item_path}: {error}")
+            else:
+                try:
+                    os.remove(item_path)
+                except Exception as error:
+                    print(f"Error al eliminar el archivo {item_path}: {error}")
+        
+        # Eliminar carpeta del usuario
+        try:
+            os.rmdir(userFolder)
+        except Exception as error:
+            print(f"Error al eliminar la carpeta del usuario {id}: {error}")
+        
+        # Eliminar información del usuario en usuarios_pines.txt
+        linesSafe = []
+        with open("usuarios_pines.txt", "r") as file:
+            lines = file.readlines() # Lee todas las líneas del archivo y las almacena en la lista "lines"
+            skip_user = False
+            for line in lines:
+                if skip_user:  # Saltar líneas asociadas al usuario a eliminar
+                    skip_user = False
+                    continue
+                if line.strip() == id:  # Verifica si la línea actual contiene el ID que se desea eliminar
+                    skip_user = True  # Indicar que las próximas líneas deben ser saltadas
+                else:
+                    linesSafe.append(line) # Si no es el ID a eliminar, agregar la línea a "linesSafe"
 
-    with open(filePinAdvanced, "r") as file:
-        pinAdvanced = file.readline().strip()
-    return pinAdvanced
-
-
-# Función para autenticar como usuario avanzado
-def authenticateAdvancedUser():
-    pinAdvanced = passwordAdvancedConf()
-    pin = getpass.getpass("Ingrese el PIN de usuario avanzado: ")
-
-    if(pin == pinAdvanced):
-        advancedConfigurationMenu()
+        with open("usuarios_pines.txt", "w") as file: # Abre el archivo "usuarios_pines.txt" para sobrescribir su contenido
+            for line in linesSafe:
+                file.write(line) # Escribe cada línea en el archivo, reemplazando el contenido original
+        
+        print(f">>> La información del usuario {id} ha sido eliminada exitosamente.")
     else:
-        print("PIN incorrecto. Regresando al menú principal.")
+        print(f">>> El usuario {id} no existe.")
 
 
-# Función para mostrar el menú de configuración avanzada
-def advancedConfigurationMenu():
-    while True:
-        print("\nConfiguración Avanzada:")
-        print("1. Eliminar usuario")
-        print("2. Modificar valores del sistema")
-        print("3. Salir")
-
-        choice = input("Seleccione una opción: ")
-
-        if choice == "1":
-            #deleteUser()
-            print("Opción desactivada temporalmente")
-        elif choice == "2":
-            #modifySystemValues()
-            print("Opción desactivada temporalmente")
-        elif choice == "3":
-            break
-        else:
-            print("Opción no válida. Intente nuevamente.")
-
-
-# Función para eliminar un usuario
-def deleteUser():
-    inputUserId = input("Ingrese el ID del usuario que desea eliminar: ")
-    userPath = f"users/{inputUserId}"
-
-    if os.path.exists(userPath):
-        confirm = input(f"¿Está seguro de eliminar al usuario '{inputUserId}'? \nDigite 'Si' para confirmar: ")
-        if confirm.lower() == "Si":
-            try:
-                os.rmdir(userPath)  # Elimina la carpeta del usuario
-                deleteUserFromCredentials(inputUserId)
-                print(f"Usuario '{inputUserId}' eliminado correctamente.")
-            except Exception as e:
-                print("Error al eliminar el usuario:", e)
-        else:
-            print("Eliminación cancelada.")
-    else:
-        print(f"El usuario '{inputUserId}' no existe.")
-
-
-# Función para eliminar un usuario del archivo 'usuarios_pines.txt'
-def deleteUserFromCredentials(user_id):
-    lines_safe = []
-    with open("usuarios_pines.txt", "r") as file:
-        lines = file.readlines()
-        for i in range(0, len(lines), 3):
-            if lines[i].strip() != user_id:
-                lines_safe.extend(lines[i:i+3])
-
-    with open("usuarios_pines.txt", "w") as file:
-        for line in lines_safe:
-            file.write(line)
-
-
-"""
-# Función para modificar valores del sistema
 def modifySystemValues():
-    print("\nValores del Sistema:")
-    for i in arrayConfAvanzada:
-        print(f"{i}. ")
+    print("Valores actuales:")
+    for index, value in enumerate(arrayConfAvanzada):
+        print(f"{index + 1}. {value}")
 
     try:
-        choice = int(input("Seleccione el número del valor que desea modificar: ")) - 1
-        if 0 <= choice < len(system_values):
-            new_value = input(f"Ingrese el nuevo valor para '{system_values[choice][1]}': ")
-            system_values[choice][0] = new_value
-            writeSystemValues(config_file, system_values)
-            print(f"Valor '{system_values[choice][1]}' actualizado correctamente.")
+        option = int(input("\nSeleccione el número de la opción que desea modificar: "))
+        if 1 <= option <= len(arrayConfAvanzada):
+            new_value = input(f"Ingrese el nuevo valor para '{arrayConfAvanzada[option - 1]}': ")
+            arrayConfAvanzada[option - 1] = new_value
+
+            with open(config_file, "w") as file:
+                for value in arrayConfAvanzada:
+                    file.write(f"{value}\n")
+
+            print(">>> Valor modificado exitosamente.")
         else:
-            print("Opción no válida.")
+            print(">>> Opción inválida.")
     except ValueError:
-        print("Ingrese un número válido.")
-"""
+        print(">>> Ingrese un número válido.")
 
 
-# Función para escribir los valores del sistema en el archivo
-def writeSystemValues(file_path, system_values):
-    with open(file_path, "w") as file:
-        for value, description in system_values:
-            file.write(f"{value} - {description}\n")
+# Función para acceder a la configuración avanzada
+def advancedSettings():
+
+    # Leer el PIN especial de la primera línea del archivo
+    with open("usuarios_pines.txt", "r") as file:
+        confPIN = file.readline().strip()
+
+    # Solicitar el PIN al usuario
+    inputPIN = getpass.getpass("Ingrese el PIN especial: \n> ")
+
+    if inputPIN == confPIN:
+        print(">>> Acceso a la configuración avanzada concedido.")
+        while True:
+            print("\nMenú de Configuración Avanzada:")
+            print("1. Eliminar Usuario")
+            print("2. Modificar Valores del Sistema")
+            print("3. Salir")
+            
+            choice = int(input("\nSeleccione una opción: \n> "))
+
+            if choice == 1:
+                userIdDelete = input("Ingrese el ID del usuario que desea eliminar: \n> ")
+                deleteUser(userIdDelete)
+            elif choice == 2:
+                print("\nMenú de Modificación de Valores del Sistema:")
+                print("1. Valor mínimo depósito inicial")
+                print("2. Tipo de cambio: valor del colon")
+                print("3. Tipo de cambio: valor del bitcoin")
+                print("4. Acumulado del tragamonedas")
+                print("5. Apuesta mínima tragamonedas")
+                print("6. Apuesta mínima blackjack")
+                
+                choiceMenu2 = int(input("\nSeleccione una opción a modificar: "))
+                if choiceMenu2 == 1:
+                    arrayConfAvanzada[0] = input("Ingrese el nuevo valor mínimo del depósito inicial: \n> $")
+                elif choiceMenu2 == 2:
+                    arrayConfAvanzada[1] = input("Ingrese el nuevo valor para el 'Tipo de cambio: valor del colon': \n> $")
+                elif choiceMenu2 == 3:
+                    arrayConfAvanzada[2] = input("Ingrese el nuevo valor para el 'Tipo de cambio: valor del bitcoin': \n> $")
+                elif choiceMenu2 == 4:
+                    arrayConfAvanzada[3] = input("Ingrese el nuevo valor para el 'Acumulado del tragamonedas': \n> $")
+                elif choiceMenu2 == 5:
+                    arrayConfAvanzada[4] = input("Ingrese el nuevo valor para la 'Apuesta mínima del tragamonedas': \n> $")
+                elif choiceMenu2 == 6:
+                    arrayConfAvanzada[5] = input("Ingrese el nuevo valor para la 'Apuesta mínima del blackjack': \n> $")
+                else:
+                    print(">>> Opción no válida.")
+
+                with open(config_file, "w") as file:
+                    for value in arrayConfAvanzada:
+                        file.write(f"{value}\n")
+
+                print(">>> Valor modificado exitosamente.")
+            elif choice == 3:
+                print(">>> Saliendo de la configuración avanzada...")
+                helpers.returnToMainMenu()
+            else:
+                print(">>> Opción no válida. Inténtelo nuevamente.")
+    else:
+        print(">>> PIN especial incorrecto. Volviendo al menú principal...")
+        helpers.returnToMainMenu()
