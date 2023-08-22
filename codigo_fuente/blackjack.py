@@ -3,11 +3,11 @@ import helpers
 import user_authentication
 import menu_casino
 
-userId
-userPin
-userName
-amountToBet
-playerMoney
+userId = None
+userPin = None
+userName = None
+amountToBet = 0
+playerMoney = 0
 
 arrayConfigAvanzada = helpers.confAvanzada()
 
@@ -84,7 +84,6 @@ def getValidAmountFormat():
 
 def checkAmountToBet(amountToBet):
     global arrayConfigAvanzada
-    global amountToBet
     global userId
     global playerMoney
 
@@ -92,26 +91,26 @@ def checkAmountToBet(amountToBet):
 
     print(f"\nSu saldo actual es de: {playerMoney}")
 
-    if not hasPlayerEnoughMoney(amountToBet, playerMoney):
-        print(
-            f"\nNo puede apostar ${amountToBet}, ya que su saldo es de: {playerMoney}")
-        print("Porfavor reintente")
-        amountToBetHandle()
-
-    if amountToBet < minAmountToBet:
-        print(
-            f"\nNo puede apostar ${amountToBet}, ya que el mínimo son ${minAmountToBet}")
-        print("Porfavor reintente")
-        amountToBetHandle()
-
     if minAmountToBet > playerMoney:
         print(f"\nNo tiene suficiente saldo... el mínimo es: {minAmountToBet}")
         print("Volviendo al submenú de juegos...")
         user_authentication.menuCasino(userId, userPin, userName)
 
+    if not hasPlayerEnoughMoney(amountToBet, playerMoney):
+        print(
+            f"\nNo puede apostar {amountToBet}, ya que su saldo es de: {playerMoney}")
+        print("Porfavor reintente")
+        amountToBetHandle()
+
+    if amountToBet < minAmountToBet:
+        print(
+            f"\nNo puede apostar {amountToBet}, ya que el mínimo son {minAmountToBet}")
+        print("Porfavor reintente")
+        amountToBetHandle()
+
 
 def hasPlayerEnoughMoney(amountToBet, playerMoney):
-    return amountToBet < playerMoney
+    return amountToBet <= playerMoney
 
 
 def play():
@@ -140,7 +139,7 @@ def assignCards():
         else:
             print("La primer carta del crupier esta oculta.")
 
-    # askToDobuleBet
+    askToDobuleBet()
 
     if (arePlayerCardsEqual(playerCards)):
         askToDivideCards()
@@ -213,7 +212,40 @@ def arePlayerCardsEqual(playerCards):
 
 
 def askToDobuleBet():
-    print("pendiente")
+    print("\n¿Desea doblar su apuesta?")
+    print("1) Sí")
+    print("2) No")
+
+    while True:
+        option = input(">>> ")
+
+        if option == "1" or option == "2":
+            break
+        else:
+            print("\nOpción inválida, reintente...")
+
+    if option == "1":
+        doubleBet()
+
+
+def doubleBet():
+    global amountToBet
+    global userId
+    global playerMoney
+    global arrayConfigAvanzada
+
+    newAmountToBet = amountToBet * 2
+
+    print(f"\nApuesta inicial: {amountToBet}")
+    print(f"Apuesta doblada: {newAmountToBet}")
+    print(f"Su saldo: {playerMoney}")
+
+    if not hasPlayerEnoughMoney(newAmountToBet, playerMoney):
+        print("\nNo puede doblar, ya que la cantidad excede su saldo.")
+        return
+
+    amountToBet = newAmountToBet
+    menu_casino.updateMoney(userId, newAmountToBet)
 
 
 hasDividedCards = False
@@ -260,6 +292,9 @@ def checkScore(playerHand):
 def checkBlackjack(playerHand):
     global crupierCards
     global hasDividedCards
+    global userId
+    global playerMoney
+    global amountToBet
 
     blackjack = 21
     crupierScore = sum(getCardValues(crupierCards))
@@ -275,9 +310,10 @@ def checkBlackjack(playerHand):
             return removeHand(playerHand)
 
         print(
-            f"\nPuntuación por encima de {blackjack}... Ha perdido su apuesta.")
+            f"\nPuntuación por encima de {blackjack}... Ha perdido su apuesta de ${amountToBet}.")
 
-        # Manejo de dinero, perdió su apuesta
+        newBalance = playerMoney - amountToBet
+        menu_casino.updateMoney(userId, newBalance)
         stayPlayingOrReturn()
 
     print(f"La carta oculta del crupier es: {crupierCards[0]}")
@@ -305,7 +341,11 @@ def checkBlackjack(playerHand):
 
             elif (crupierScore > blackjack):
                 print("\n¡Ganaste! El crupier se pasó de 21")
-                # ganarApuesta - manejo de dinero
+                print(f"Has ganado ${amountToBet * 2}")
+
+                newBalance = playerMoney + (amountToBet * 2)
+                menu_casino.updateMoney(userId, newBalance)
+
                 break
 
             elif (crupierScore > playerScore):
@@ -315,13 +355,23 @@ def checkBlackjack(playerHand):
                     print(
                         f"\nHas perdido una mano, te queda la otra mano.")
                     return removeHand(playerHand)
-                # perderApuesta - manejo de dinero
+
+                print(
+                    f"Has perdido ${amountToBet}")
+
+                newBalance = playerMoney - amountToBet
+                menu_casino.updateMoney(userId, newBalance)
+
                 break
 
             elif (crupierScore < playerScore):
                 print(
                     f"\n¡Ganaste! El crupier sacó {crupierScore} y tú {playerScore}")
-                # ganarApuesta - manejo de dinero
+                print(f"Has ganado ${amountToBet * 2}")
+
+                newBalance = playerMoney + (amountToBet * 2)
+                menu_casino.updateMoney(userId, newBalance)
+
                 break
 
     stayPlayingOrReturn()
@@ -377,7 +427,7 @@ def stayPlayingOrReturn():
             print("Opción inválida, reintente...")
 
     if option == "1":
-        start()
+        start(userId, userPin, userName)
     else:
         user_authentication.menuCasino(userId, userPin, userName)
 

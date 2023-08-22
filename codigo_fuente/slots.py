@@ -4,6 +4,7 @@ import os
 import random
 import time
 import user_authentication
+import menu_casino
 
 
 arrayConfigAvanzada = helpers.confAvanzada()
@@ -33,9 +34,10 @@ def start(id, pin, name):
           '-- ¡Buena suerte! :) --')
 
     # -------- Seccion para traer el saldo actual del usuario y validarlo ----------#
-    userPath = f"users/{userId}/saldos.txt"
-    with open(userPath, "r") as moneyFile:
-        balance, _ = eval(moneyFile.read().strip())
+    # userPath = f"users/{userId}/saldos.txt"
+    # with open(userPath, "r") as moneyFile:
+    #    balance, _ = eval(moneyFile.read().strip())
+    balance = menu_casino.getMoney(userId)
 
     if (float(balance) < minBet):
         print("Lo sentimos, no cuenta con saldo suficiente para poder realizar una apuesta minima. Regresando al menu principal...")
@@ -56,7 +58,7 @@ def game():
     result = []
 
     while (flag == True):
-        print("\nSaldo actual: "+str(getMoney()))
+        print("\nSaldo actual: "+str(menu_casino.getMoney(userId)))
 
         try:
             while flag2:
@@ -66,8 +68,8 @@ def game():
                     print(
                         "Lo sentimos, la cantidad minima a apostar es de $10. Inténtelo nuevamente...")
                 else:
-                    currentMoney = float(getMoney())-betMoney
-                    updateMoney(currentMoney)
+                    currentMoney = float(menu_casino.getMoney(userId))-betMoney
+                    menu_casino.updateMoney(userId, currentMoney)
                     flag2 = False
 
         except ValueError:
@@ -107,20 +109,21 @@ def game():
 
         if (result[0] == "@") and (result[1] == "@") and (result[2] == "@"):
             print("¡Recuperas tu dinero apostado!")
-            currentMoney = float(getMoney())+betMoney
-            updateMoney(currentMoney)
+            currentMoney = float(menu_casino.getMoney(userId))+betMoney
+            menu_casino.updateMoney(userId, currentMoney)
         elif (result[0] == "#") and (result[1] == "#") and (result[2] == "#"):
             print("¡¡Felicidades, haz obtenido el doble!!")
-            currentMoney = float(getMoney())+(betMoney*2)
-            updateMoney(currentMoney)
+            currentMoney = float(menu_casino.getMoney(userId))+(betMoney*2)
+            menu_casino.updateMoney(userId, currentMoney)
         elif (result[0] == "+") and (result[1] == "+") and (result[2] == "+"):
             print("¡¡¡Felicidades, haz ganado el triple de lo invertido!!!")
-            currentMoney = float(getMoney())+(betMoney*3)
-            updateMoney(currentMoney)
+            currentMoney = float(menu_casino.getMoney(userId))+(betMoney*3)
+            menu_casino.updateMoney(userId, currentMoney)
         elif (result[0] == "7") and (result[1] == "7") and (result[2] == "7"):
             print("♦♦♦ FELICIDADES, GANASTE EL ACUMULADO ♦♦♦")
-            currentMoney = float(getMoney())+(betMoney*acumulate)
-            updateMoney(currentMoney)
+            currentMoney = float(menu_casino.getMoney(
+                userId))+(betMoney*acumulate)
+            menu_casino.updateMoney(userId, currentMoney)
         else:
             print("Estuviste muy cerca, vuelve a intentarlo")
 
@@ -133,16 +136,3 @@ def game():
         else:
             flag == False
             return flag, user_authentication.menuCasino
-
-
-def updateMoney(money):
-    userPath = f"users/{userId}/saldos.txt"
-    with open(userPath, "w") as file:
-        file.write(f"({money}, True)")
-
-
-def getMoney():
-    userPath = f"users/{userId}/saldos.txt"
-    with open(userPath, "r") as moneyFile:
-        balance, _ = eval(moneyFile.read().strip())
-    return balance

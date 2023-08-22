@@ -20,10 +20,11 @@ def authenticateAdvancedUser():
     pinAdvanced = passwordAdvancedConf()
     pin = getpass.getpass("Ingrese el PIN de usuario avanzado: ")
 
-    if(pin == pinAdvanced):
+    if (pin == pinAdvanced):
         advancedConfigurationMenu()
     else:
         print("PIN incorrecto. Regresando al menú principal.")
+        helpers.returnToMainMenu()
 
 
 # Función para mostrar el menú de configuración avanzada
@@ -37,10 +38,10 @@ def advancedConfigurationMenu():
         choice = input("Seleccione una opción: ")
 
         if choice == "1":
-            #deleteUser()
+            # deleteUser()
             print("Opción desactivada temporalmente")
         elif choice == "2":
-            #modifySystemValues()
+            # modifySystemValues()
             print("Opción desactivada temporalmente")
         elif choice == "3":
             break
@@ -54,7 +55,8 @@ def deleteUser():
     userPath = f"users/{inputUserId}"
 
     if os.path.exists(userPath):
-        confirm = input(f"¿Está seguro de eliminar al usuario '{inputUserId}'? \nDigite 'Si' para confirmar: ")
+        confirm = input(
+            f"¿Está seguro de eliminar al usuario '{inputUserId}'? \nDigite 'Si' para confirmar: ")
         if confirm.lower() == "Si":
             try:
                 os.rmdir(userPath)  # Elimina la carpeta del usuario
