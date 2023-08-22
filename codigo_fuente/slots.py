@@ -4,11 +4,15 @@ import os
 import random
 import time
 import user_authentication
+import menu_casino
 
 
 arrayConfigAvanzada = helpers.confAvanzada()
-acumulate = float(arrayConfigAvanzada[3]) #El valor predefinido del acumulado del tragamonedas
-minBet = float(arrayConfigAvanzada[4]) #El valor minimo de apuesta que puede hacer el usuario
+# El valor predefinido del acumulado del tragamonedas
+acumulate = float(arrayConfigAvanzada[3])
+# El valor minimo de apuesta que puede hacer el usuario
+minBet = float(arrayConfigAvanzada[4])
+
 
 def start(id, pin, name):
     global userId
@@ -28,17 +32,19 @@ def start(id, pin, name):
           '6. Cobra tus ganancias: Si obtuviste una combinación ganadora, se te otorgará un premio en función de la tabla de pagos del juego y tu apuesta. Tus ganacias se depositarian a tu salario del casino.\n'
           '7. Sigue jugando: Puedes continuar jugando, ajustando tus apuestas y repitiendo los pasos anteriores. Recuerda que el juego es completamente aleatorio, y las probabilidades de ganar pueden depender de la cantidad de veces que juegues.\n\n'
           '-- ¡Buena suerte! :) --')
-    
-    #-------- Seccion para traer el saldo actual del usuario y validarlo ----------#
-    userPath = f"users/{userId}/saldos.txt"
-    with open(userPath, "r") as moneyFile:
-        balance, _ = eval(moneyFile.read().strip())
 
-    if(float(balance) < minBet):
+    # -------- Seccion para traer el saldo actual del usuario y validarlo ----------#
+    # userPath = f"users/{userId}/saldos.txt"
+    # with open(userPath, "r") as moneyFile:
+    #    balance, _ = eval(moneyFile.read().strip())
+    balance = menu_casino.getMoney(userId)
+
+    if (float(balance) < minBet):
         print("Lo sentimos, no cuenta con saldo suficiente para poder realizar una apuesta minima. Regresando al menu principal...")
-        user_authentication.menuCasino(id,pin,name)
+        user_authentication.menuCasino(id, pin, name)
     else:
         game()
+
 
 def game():
 
@@ -51,19 +57,21 @@ def game():
     global result
     result = []
 
-    while(flag == True):
-        print("\nSaldo actual: "+str(getMoney()))
+    while (flag == True):
+        print("\nSaldo actual: "+str(menu_casino.getMoney(userId)))
 
         try:
             while flag2:
-                betMoney = float(input("Digite la cantidad de dinero que desea apostar: "))
-                if(betMoney < minBet):
-                    print("Lo sentimos, la cantidad minima a apostar es de $10. Inténtelo nuevamente...")
+                betMoney = float(
+                    input("Digite la cantidad de dinero que desea apostar: "))
+                if (betMoney < minBet):
+                    print(
+                        "Lo sentimos, la cantidad minima a apostar es de $10. Inténtelo nuevamente...")
                 else:
-                    currentMoney = float(getMoney())-betMoney
-                    updateMoney(currentMoney)
+                    currentMoney = float(menu_casino.getMoney(userId))-betMoney
+                    menu_casino.updateMoney(userId, currentMoney)
                     flag2 = False
-        
+
         except ValueError:
             print("El valor de dinero ingresado es invalido, intentelo de nuevo")
 
@@ -71,22 +79,22 @@ def game():
 
         print("Este es el resultado:")
 
-        if(totalAttemptsSlots == 4):
+        if (totalAttemptsSlots == 4):
             for i in range(3):
                 result.append("@")
                 print(" ".join(result))
                 time.sleep(1.5)
-        elif(totalAttemptsSlots == 9):
+        elif (totalAttemptsSlots == 9):
             for i in range(3):
                 result.append("#")
                 print(" ".join(result))
                 time.sleep(1.5)
-        elif(totalAttemptsSlots == 14):
+        elif (totalAttemptsSlots == 14):
             for i in range(3):
                 result.append("+")
                 print(" ".join(result))
                 time.sleep(1.5)
-        elif(totalAttemptsSlots == 19):
+        elif (totalAttemptsSlots == 19):
             for i in range(3):
                 result.append("7")
                 print(" ".join(result))
@@ -101,20 +109,21 @@ def game():
 
         if (result[0] == "@") and (result[1] == "@") and (result[2] == "@"):
             print("¡Recuperas tu dinero apostado!")
-            currentMoney = float(getMoney())+betMoney
-            updateMoney(currentMoney)
+            currentMoney = float(menu_casino.getMoney(userId))+betMoney
+            menu_casino.updateMoney(userId, currentMoney)
         elif (result[0] == "#") and (result[1] == "#") and (result[2] == "#"):
             print("¡¡Felicidades, haz obtenido el doble!!")
-            currentMoney = float(getMoney())+(betMoney*2)
-            updateMoney(currentMoney)
+            currentMoney = float(menu_casino.getMoney(userId))+(betMoney*2)
+            menu_casino.updateMoney(userId, currentMoney)
         elif (result[0] == "+") and (result[1] == "+") and (result[2] == "+"):
             print("¡¡¡Felicidades, haz ganado el triple de lo invertido!!!")
-            currentMoney = float(getMoney())+(betMoney*3)
-            updateMoney(currentMoney)
+            currentMoney = float(menu_casino.getMoney(userId))+(betMoney*3)
+            menu_casino.updateMoney(userId, currentMoney)
         elif (result[0] == "7") and (result[1] == "7") and (result[2] == "7"):
             print("♦♦♦ FELICIDADES, GANASTE EL ACUMULADO ♦♦♦")
-            currentMoney = float(getMoney())+(betMoney*acumulate)
-            updateMoney(currentMoney)
+            currentMoney = float(menu_casino.getMoney(
+                userId))+(betMoney*acumulate)
+            menu_casino.updateMoney(userId, currentMoney)
         else:
             print("Estuviste muy cerca, vuelve a intentarlo")
 
@@ -127,16 +136,3 @@ def game():
         else:
             flag == False
             return flag, user_authentication.menuCasino
-            
-
-    
-def updateMoney(money):
-    userPath = f"users/{userId}/saldos.txt"
-    with open(userPath, "w") as file:
-        file.write(f"({money}, True)")
-
-def getMoney():
-    userPath = f"users/{userId}/saldos.txt"
-    with open(userPath, "r") as moneyFile:
-        balance, _ = eval(moneyFile.read().strip())
-    return balance

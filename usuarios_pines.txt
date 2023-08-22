@@ -5,3 +5,6 @@ Alvaro
 alvaro02
 Alvaro
 789012
+fauricio
+Fauricio
+123456

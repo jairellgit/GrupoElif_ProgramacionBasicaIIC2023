@@ -14,8 +14,7 @@ def start():
     elif menuOption == 3:
         authenticateAdvancedUser()
     elif menuOption == 4:
-        print(">>> Saliendo al menú principal...")
-        start()
+        print("\nSaliendo de DreamWorld Casino... ¡Gracias por jugar!\n")
 
 
 start()
