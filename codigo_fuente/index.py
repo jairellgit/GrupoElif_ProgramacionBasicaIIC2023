@@ -1,3 +1,5 @@
+import sys
+
 from menu import runMainMenu
 from user_registration import startUserRegistration
 from user_authentication import login
@@ -7,14 +9,15 @@ from menu_conf_avanzada import authenticateAdvancedUser
 def start():
     menuOption = runMainMenu()
 
-    if menuOption == 1:
+    if menuOption == "1":
         startUserRegistration()
-    elif menuOption == 2:
+    elif menuOption == "2":
         login()
-    elif menuOption == 3:
+    elif menuOption == "3":
         authenticateAdvancedUser()
-    elif menuOption == 4:
-        print("\nSaliendo de DreamWorld Casino... ¡Gracias por jugar!\n")
+    elif menuOption == "4":
+        print("\nSaliendo de DreamWorld Casino...\n")
+        sys.exit()
 
 
 start()

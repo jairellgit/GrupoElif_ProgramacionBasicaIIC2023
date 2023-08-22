@@ -7,12 +7,14 @@ def printMainMenu():
 
 
 def getMenuOption():
-    menuOption = int(input("\nIngrese una opción del menú: "))
+    menuOption = input("\nIngrese una opción del menú: ")
     return menuOption
 
 
 def isValidMenuOption(menuOption):
-    return menuOption >= 1 and menuOption <= 4
+    validOptions = ["1", "2", "3", "4"]
+
+    return menuOption in validOptions
 
 
 def validateMenuOption(menuOption):
