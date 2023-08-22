@@ -81,8 +81,6 @@ def convertMoney(depositMoney, moneyType):
 
 # Realizar deposito
 def processDeposit(id, moneyType):
-    # minMoney = getMinMoney(moneyType)
-
     depositAttempts = 0
     while depositAttempts < 3:
         depositMoney = float(input(f"Ingrese el monto a depositar: \n>"))
@@ -110,16 +108,77 @@ def processDeposit(id, moneyType):
 
 # Función general para el deposito
 def depositMoney(id):
-    printMenuMoneyType(id)
-    moneyType = int(input(
-        "Digite el número de opción correspondiente al tipo de moneda que desea depositar: \n> "))
+    moneyTypeAttempts = 0
+    while moneyTypeAttempts < 3:
+        printMenuMoneyType(id)
+        moneyType = int(input("Digite el número de opción correspondiente al tipo de moneda que desea depositar: \n> "))
 
-    processDeposit(id, moneyType)
+        try:
+            if(moneyType == 1) or (moneyType == 2) or (moneyType == 3):
+                processDeposit(id, moneyType)
+                print("\n>>> Ingrese solo números.")
+            else:
+                moneyTypeAttempts += 1
+                attemptsLeft = 3 - moneyTypeAttempts
+                print(f"\n>>> La opción ingresada no es válida. Le quedan {attemptsLeft} intentos.")
+        except ValueError:
+            print("\n>>> Ingrese solo números.")
+    
+    if (moneyTypeAttempts == 3):
+        print(">>> Ha excedido el máximo de intentos para realizar el depósito, volviendo al menú principal...")
+        helpers.returnToMainMenu()
 
-
+    
 # >>> Eliminar usuario
 
-# Función para eliminar un usuario (en progreso)
+def deleteFilesAndFolder(id):
+    userFolder = f"users/{id}"
+    
+    if os.path.exists(userFolder):
+        # Eliminar archivos y subcarpetas dentro de la carpeta del usuario
+        for item in os.listdir(userFolder):
+            item_path = os.path.join(userFolder, item)
+            if os.path.isdir(item_path):
+                try:
+                    os.rmdir(item_path)
+                except Exception as error:
+                    print(f"Error al eliminar la carpeta {item_path}: {error}")
+            else:
+                try:
+                    os.remove(item_path)
+                except Exception as error:
+                    print(f"Error al eliminar el archivo {item_path}: {error}")
+        
+        # Eliminar carpeta del usuario
+        try:
+            os.rmdir(userFolder)
+        except Exception as error:
+            print(f"Error al eliminar la carpeta del usuario {id}: {error}")
+        
+        # Eliminar información del usuario en usuarios_pines.txt
+        linesSafe = []
+        with open("usuarios_pines.txt", "r") as file:
+            lines = file.readlines() # Lee todas las líneas del archivo y las almacena en la lista "lines"
+            skip_user = False
+            for line in lines:
+                if skip_user:  # Saltar líneas asociadas al usuario a eliminar
+                    skip_user = False
+                    continue
+                if line.strip() == id:  # Verifica si la línea actual contiene el ID que se desea eliminar
+                    skip_user = True  # Indicar que las próximas líneas deben ser saltadas
+                else:
+                    linesSafe.append(line) # Si no es el ID a eliminar, agregar la línea a "linesSafe"
+
+        with open("usuarios_pines.txt", "w") as file: # Abre el archivo "usuarios_pines.txt" para sobrescribir su contenido
+            for line in linesSafe:
+                file.write(line) # Escribe cada línea en el archivo, reemplazando el contenido original
+        
+        print(f">>> La información del usuario {id} ha sido eliminada exitosamente.")
+    else:
+        print(f">>> El usuario {id} no existe.")
+
+
+# Función para eliminar un usuario
 def deleteUser(id, pin, name):
     print("Por favor, ingrese su PIN para confirmar la eliminación de su cuenta:")
     userPin = int(getpass.getpass("PIN: "))
@@ -131,31 +190,7 @@ def deleteUser(id, pin, name):
                 f"¿Está seguro de que desea eliminar su cuenta, {name}? \nDigite 'Si' para confirmar: ")
             if confirm == "Si":
                 try:
-                    """
-                    # Eliminar carpeta de usuario
-                    userPath = f"users/{id}"
-                    os.remove(userPath)
-                    """
-
-                    # Eliminar información del usuario en usuarios_pines.txt
-                    linesSafe = []
-                    with open("usuarios_pines.txt", "r") as file:
-                        # Lee todas las líneas del archivo y las almacena en la lista "lines"
-                        lines = file.readlines()
-                        # Procesar de a tres líneas (id, nombre, pin)
-                        for i in range(0, len(lines), 3):
-                            # Verifica si el id de la línea actual no coincide con el id que se desea eliminar
-                            if lines[i].strip() != id:
-                                # Si no coincide, agrega las tres líneas correspondientes al usuario a "linesSafe"
-                                linesSafe.extend(lines[i:i+3])
-
-                    # Abre el archivo "usuarios_pines.txt" para sobrescribir su contenido
-                    with open("usuarios_pines.txt", "w") as file:
-                        for line in linesSafe:
-                            # Escribe cada línea en el archivo, reemplazando el contenido original
-                            file.write(line)
-
-                    print(">>> ¡Su cuenta ha sido eliminada exitosamente!")
+                    deleteFilesAndFolder(id)
                     return True
                 except ValueError:
                     print(f"{ValueError}")

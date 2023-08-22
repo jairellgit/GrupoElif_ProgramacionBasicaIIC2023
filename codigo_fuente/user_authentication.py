@@ -28,15 +28,20 @@ def login():
         if isUserExists(userId):  # Va a validar que el usuario exista
             userPinTxt = getUserPin(userId)
             while userPinAttempts < totalValidAttempts:
-                userPin = int(getpass.getpass("Digite su PIN: "))
-                if userPin == userPinTxt:
-                    id, pin, name = getUserInfo(userId)
-                    menuCasino(id, pin, name)
-                else:
+                try:
+                    userPin = int(getpass.getpass("Digite su PIN: "))
+                    if userPin == userPinTxt:
+                        id, pin, name = getUserInfo(userId)
+                        menuCasino(id, pin, name)
+                    else:
+                        userPinAttempts += 1
+                        attemptsLeft = totalValidAttempts - userPinAttempts
+                        print(
+                            f">>> El dato ingresado no es válido. Le quedan {attemptsLeft} intentos.")
+                except ValueError:
                     userPinAttempts += 1
                     attemptsLeft = totalValidAttempts - userPinAttempts
-                    print(
-                        f">>> El dato ingresado no es válido. Le quedan {attemptsLeft} intentos.")
+                    print(f"Solo se permite ingresar numeros, Le quedan {attemptsLeft} intentos.")
             else:
                 print(
                     f"\n>>> Ha excedido el máximo de {totalValidAttempts} intentos para el PIN, volviendo al menú principal...")
