@@ -221,11 +221,20 @@ def getUserInfo():
     return userInfo
 
 
+def resetGlobalValues():
+    global userIdAttempts
+    totalUserIdValidAttempts = 3
+
+    if userIdAttempts >= totalUserIdValidAttempts:
+        userIdAttempts = 0
+
+
 def startUserRegistration():
     global userInfo
 
     print("\n♦ Registro de nuevo usuario")
 
+    resetGlobalValues()
     userInfo = getUserInfo()  # Engloba puntos 1, 2 y 3
     userInfo.append(depositMoney(userInfo[0]))  # Punto 4
     addRegistration()  # Punto 5
