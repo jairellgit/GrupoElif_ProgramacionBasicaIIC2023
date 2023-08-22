@@ -1,7 +1,7 @@
 from menu import runMainMenu
 from user_registration import startUserRegistration
 from user_authentication import login
-from menu_conf_avanzada import authenticateAdvancedUser
+from menu_conf_avanzada import advancedSettings
 
 
 def start():
@@ -12,7 +12,7 @@ def start():
     elif menuOption == 2:
         login()
     elif menuOption == 3:
-        authenticateAdvancedUser()
+        advancedSettings()
     elif menuOption == 4:
         print(">>> Saliendo al menú principal...")
         start()
