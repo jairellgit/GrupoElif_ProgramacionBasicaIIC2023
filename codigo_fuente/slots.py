@@ -33,10 +33,6 @@ def start(id, pin, name):
           '7. Sigue jugando: Puedes continuar jugando, ajustando tus apuestas y repitiendo los pasos anteriores. Recuerda que el juego es completamente aleatorio, y las probabilidades de ganar pueden depender de la cantidad de veces que juegues.\n\n'
           '-- ¡Buena suerte! :) --')
 
-    # -------- Seccion para traer el saldo actual del usuario y validarlo ----------#
-    # userPath = f"users/{userId}/saldos.txt"
-    # with open(userPath, "r") as moneyFile:
-    #    balance, _ = eval(moneyFile.read().strip())
     balance = menu_casino.getMoney(userId)
 
     if (float(balance) < minBet):
@@ -59,6 +55,7 @@ def game():
 
     while (flag == True):
         print("\nSaldo actual: "+str(menu_casino.getMoney(userId)))
+        print("Apuesta mínima a realizar: "+str(minBet)+"\n")
 
         try:
             while flag2:
