@@ -1,13 +1,13 @@
 gameOFprogra06
-alvaro01
-Alvaro
-123456
-alvaro02
-Alvaro
-789012
 jai123
 Jairell
 123456
 fauricio
 Fauricio
 123456
+alvaro01
+Alvaro
+123456
+alvaro02
+Alvaro Dionisio
+789012
