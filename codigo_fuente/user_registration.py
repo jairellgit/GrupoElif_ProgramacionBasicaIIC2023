@@ -105,7 +105,7 @@ def printMenuMoneyType(id):
 
 # Convertir el dinero
 def convertMoney(depositMoney, moneyType):
-    listaTipoDeCambio = helpers.tipoDeCambio()
+    listaTipoDeCambio = helpers.confAvanzada()
 
     if moneyType == 1: #Valor equivalente de 1 Dolar a Colones
         valorColon = float(listaTipoDeCambio[1])        
