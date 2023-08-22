@@ -7,8 +7,6 @@ def returnToMainMenu():
     start()
 
 # Obtener el tipo de cambio del archivo Configuración Avanzada
-
-
 def confAvanzada():
     fileConfiguracionAvanzada = "configuracion_avanzada.txt"
 
