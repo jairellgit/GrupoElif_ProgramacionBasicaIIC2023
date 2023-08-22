@@ -87,24 +87,25 @@ def checkAmountToBet(amountToBet):
     global userId
     global playerMoney
 
-    minAmountToBet = float(arrayConfigAvanzada[4])
+    minAmountToBet = float(arrayConfigAvanzada[5])
 
-    print(f"\nSu saldo actual es de: {playerMoney}")
+    print(f"\nSu saldo actual es de: ${playerMoney}")
 
     if minAmountToBet > playerMoney:
-        print(f"\nNo tiene suficiente saldo... el mínimo es: {minAmountToBet}")
+        print(
+            f"\nNo tiene suficiente saldo... el mínimo es: ${minAmountToBet}")
         print("Volviendo al submenú de juegos...")
         user_authentication.menuCasino(userId, userPin, userName)
 
     if not hasPlayerEnoughMoney(amountToBet, playerMoney):
         print(
-            f"\nNo puede apostar {amountToBet}, ya que su saldo es de: {playerMoney}")
+            f"\nNo puede apostar ${amountToBet}, ya que su saldo es de: ${playerMoney}")
         print("Porfavor reintente")
         amountToBetHandle()
 
     if amountToBet < minAmountToBet:
         print(
-            f"\nNo puede apostar {amountToBet}, ya que el mínimo son {minAmountToBet}")
+            f"\nNo puede apostar ${amountToBet}, ya que el mínimo son ${minAmountToBet}")
         print("Porfavor reintente")
         amountToBetHandle()
 
@@ -236,9 +237,9 @@ def doubleBet():
 
     newAmountToBet = amountToBet * 2
 
-    print(f"\nApuesta inicial: {amountToBet}")
-    print(f"Apuesta doblada: {newAmountToBet}")
-    print(f"Su saldo: {playerMoney}")
+    print(f"\nApuesta inicial: ${amountToBet}")
+    print(f"Apuesta doblada: ${newAmountToBet}")
+    print(f"Su saldo: ${playerMoney}")
 
     if not hasPlayerEnoughMoney(newAmountToBet, playerMoney):
         print("\nNo puede doblar, ya que la cantidad excede su saldo.")
@@ -441,7 +442,7 @@ def menu():
 def printMenu():
     global playerMoney
 
-    print(f"\n♦ Menú del Blackjack ♦ (Saldo actual: {playerMoney})")
+    print(f"\n♦ Menú del Blackjack ♦ (Saldo actual: ${playerMoney})")
     print("1) Pedir Carta")
     print("2) Deseo parar")
     print("3) Consultar mis Cartas")
