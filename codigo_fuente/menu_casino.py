@@ -33,22 +33,24 @@ def withdrawMoney(id):
             if amount <= balance:
                 newBalance = balance - amount
                 updateMoney(id, newBalance)
-                print(f"\n>>> Retiro exitoso. Su nuevo saldo es: ${newBalance:.4f}")
+                print(
+                    f"\n>>> Retiro exitoso. Su nuevo saldo es: ${newBalance:.4f}")
                 return
             else:
                 depositAttempts += 1
                 attemptsLeft = 3 - depositAttempts
-                print(f">>> Fondos insuficientes. Le quedan {attemptsLeft} intentos.")
+                print(
+                    f">>> Fondos insuficientes. Le quedan {attemptsLeft} intentos.")
                 return
         except ValueError:
             print("\n>>> Por favor, ingrese un monto válido.")
-    
+
     if (depositAttempts == 3):
         print(">>> Ha excedido el máximo de intentos para realizar el depósito, volviendo al menú principal...")
         helpers.returnToMainMenu()
-    
 
-# >>> Depositar dinero 
+
+# >>> Depositar dinero
 
 # Menú opciones deposito
 def printMenuMoneyType(id):
@@ -65,13 +67,13 @@ def printMenuMoneyType(id):
 def convertMoney(depositMoney, moneyType):
     listaTipoDeCambio = helpers.confAvanzada()
 
-    if moneyType == 1: #Valor equivalente de 1 Dolar a Colones
-        valorColon = float(listaTipoDeCambio[1])        
+    if moneyType == 1:  # Valor equivalente de 1 Dolar a Colones
+        valorColon = float(listaTipoDeCambio[1])
         ConvDepositMoney = depositMoney / valorColon
-    elif moneyType == 3: #Valor equivalente de 1 Dolar a Bitcoins
+    elif moneyType == 3:  # Valor equivalente de 1 Dolar a Bitcoins
         valorBitcoin = float(listaTipoDeCambio[2])
         ConvDepositMoney = depositMoney / valorBitcoin
-    else: #Dólares
+    else:  # Dólares
         ConvDepositMoney = depositMoney
 
     return ConvDepositMoney
@@ -82,20 +84,23 @@ def processDeposit(id, moneyType):
     depositAttempts = 0
     while depositAttempts < 3:
         depositMoney = float(input(f"Ingrese el monto a depositar: \n>"))
-        if(depositMoney > 0):
-            try:    
+        if (depositMoney > 0):
+            try:
                 convertedMoney = convertMoney(depositMoney, moneyType)
                 newMoney = getMoney(id) + convertedMoney
                 updateMoney(id, newMoney)
-                print(f"\n>>> Depósito realizado. Su nuevo saldo es: ${newMoney:.4f}") #El newMoney:.2f se usa para mostrar solo 4 decimales
+                # El newMoney:.2f se usa para mostrar solo 4 decimales
+                print(
+                    f"\n>>> Depósito realizado. Su nuevo saldo es: ${newMoney:.4f}")
                 return
             except ValueError:
                 print("\n>>> Ingrese solo números.")
         else:
             depositAttempts += 1
             attemptsLeft = 3 - depositAttempts
-            print(f"\n>>> El monto ingresado no es válido. Le quedan {attemptsLeft} intentos.")
-    
+            print(
+                f"\n>>> El monto ingresado no es válido. Le quedan {attemptsLeft} intentos.")
+
     if (depositAttempts == 3):
         print(">>> Ha excedido el máximo de intentos para realizar el depósito, volviendo al menú principal...")
         helpers.returnToMainMenu()
@@ -179,9 +184,10 @@ def deleteUser(id, pin, name):
     userPin = int(getpass.getpass("PIN: "))
 
     if userPin == pin:
-        balance  = getMoney(id)
+        balance = getMoney(id)
         if balance == 0:
-            confirm = input(f"¿Está seguro de que desea eliminar su cuenta, {name}? \nDigite 'Si' para confirmar: ")
+            confirm = input(
+                f"¿Está seguro de que desea eliminar su cuenta, {name}? \nDigite 'Si' para confirmar: ")
             if confirm == "Si":
                 try:
                     deleteFilesAndFolder(id)
@@ -189,7 +195,7 @@ def deleteUser(id, pin, name):
                 except ValueError:
                     print(f"{ValueError}")
         else:
-            print("No puede eliminar su cuenta si tiene dinero disponible. Por favor, retire o juegue su saldo antes.")
+            print(">>> No puede eliminar su cuenta si tiene dinero disponible. Por favor, retire o juegue su saldo antes.")
     else:
-        print("El PIN ingresado no coincide. Operación de eliminación cancelada.")
+        print(">>> El PIN ingresado no coincide. Operación de eliminación cancelada.")
     return

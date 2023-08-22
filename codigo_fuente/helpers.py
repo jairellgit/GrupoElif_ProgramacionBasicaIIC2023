@@ -20,6 +20,7 @@ def confAvanzada():
 
     # Recorrer la lista de líneas y agregar cada línea al array
     for linea in lineas:
-        listaConfAvanzada.append(linea.strip())  # strip() elimina los caracteres de nueva línea al final de cada línea
+        # strip() elimina los caracteres de nueva línea al final de cada línea
+        listaConfAvanzada.append(linea.strip())
 
     return listaConfAvanzada
