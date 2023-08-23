@@ -143,28 +143,26 @@ def getMinMoney(moneyType):
 # Realizar deposito
 def processDeposit(id, moneyType):
     minMoney = getMinMoney(moneyType)
-
     depositAttempts = 0
+
     while depositAttempts < 3:
-        depositMoney = float(
-            input(f"Ingrese el monto a depositar (mínimo {getMinMoney(moneyType)}): \n>"))
-        if depositMoney >= minMoney:
-            try:
+        try:
+            depositMoney = float(input(f"Ingrese el monto a depositar (mínimo {getMinMoney(moneyType)}): \n>"))
+            if depositMoney >= minMoney:
                 convertedMoney = convertMoney(depositMoney, moneyType)
-                print(
-                    f"\n>>> Deposito realizado con éxito. ¡Registro de usuario completado!")
+                print(f"\n>>> Deposito realizado con éxito. ¡Registro de usuario completado!")
                 return convertedMoney
-            except ValueError:
-                print("\n>>> Ingrese solo números.")
-        else:
-            depositAttempts += 1
-            attemptsLeft = 3 - depositAttempts
-            print(
-                f"\n>>> El monto ingresado no es válido, debe equivaler mínimo a {minMoney}. Le quedan {attemptsLeft} intentos.")
+            else:
+                depositAttempts += 1
+                attemptsLeft = 3 - depositAttempts
+                print(f"\n>>> El monto ingresado no es válido, debe equivaler mínimo a {minMoney}. Le quedan {attemptsLeft} intentos.")
+        except ValueError:
+            print("\n>>> Ingrese solo números.")
 
     if (depositAttempts == 3):
         print(">>> Ha excedido el máximo de intentos para realizar el depósito, volviendo al menú principal...")
         helpers.returnToMainMenu()
+    
 
 
 # Función general para el deposito
