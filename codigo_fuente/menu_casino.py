@@ -82,24 +82,22 @@ def convertMoney(depositMoney, moneyType):
 # Realizar deposito
 def processDeposit(id, moneyType):
     depositAttempts = 0
+
     while depositAttempts < 3:
-        depositMoney = float(input(f"Ingrese el monto a depositar: \n>"))
-        if (depositMoney > 0):
-            try:
-                convertedMoney = convertMoney(depositMoney, moneyType)
-                newMoney = getMoney(id) + convertedMoney
-                updateMoney(id, newMoney)
-                # El newMoney:.2f se usa para mostrar solo 4 decimales
-                print(
-                    f"\n>>> Depósito realizado. Su nuevo saldo es: ${newMoney:.4f}")
-                return
-            except ValueError:
+        try:
+            depositMoney = float(input(f"Ingrese el monto a depositar: \n>"))
+            if (depositMoney > 0):
+                    convertedMoney = convertMoney(depositMoney, moneyType)
+                    newMoney = getMoney(id) + convertedMoney
+                    updateMoney(id, newMoney)
+                    print(f"\n>>> Depósito realizado. Su nuevo saldo es: ${newMoney:.4f}") # El newMoney:.2f se usa para mostrar solo 4 decimales
+                    return
+            else:
+                depositAttempts += 1
+                attemptsLeft = 3 - depositAttempts
+                print(f"\n>>> El monto ingresado no es válido. Le quedan {attemptsLeft} intentos.")
+        except ValueError:
                 print("\n>>> Ingrese solo números.")
-        else:
-            depositAttempts += 1
-            attemptsLeft = 3 - depositAttempts
-            print(
-                f"\n>>> El monto ingresado no es válido. Le quedan {attemptsLeft} intentos.")
 
     if (depositAttempts == 3):
         print(">>> Ha excedido el máximo de intentos para realizar el depósito, volviendo al menú principal...")
@@ -111,17 +109,16 @@ def depositMoney(id):
     moneyTypeAttempts = 0
     while moneyTypeAttempts < 3:
         printMenuMoneyType(id)
-        moneyType = int(input("Digite el número de opción correspondiente al tipo de moneda que desea depositar: \n> "))
-
         try:
+            moneyType = int(input("Digite el número de opción correspondiente al tipo de moneda que desea depositar: \n> "))
             if(moneyType == 1) or (moneyType == 2) or (moneyType == 3):
                 processDeposit(id, moneyType)
-                print("\n>>> Ingrese solo números.")
+                return
             else:
                 moneyTypeAttempts += 1
                 attemptsLeft = 3 - moneyTypeAttempts
                 print(f"\n>>> La opción ingresada no es válida. Le quedan {attemptsLeft} intentos.")
-        except ValueError:
+        except Exception:
             print("\n>>> Ingrese solo números.")
     
     if (moneyTypeAttempts == 3):
