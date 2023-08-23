@@ -7,7 +7,7 @@ def returnToMainMenu():
     start()
 
 # Obtener el tipo de cambio del archivo Configuración Avanzada
-def tipoDeCambio():
+def confAvanzada():
     fileConfiguracionAvanzada = "configuracion_avanzada.txt"
 
     # Abrir el archivo en modo lectura (r) y guardarlo en una variable usando 'with'
@@ -20,6 +20,7 @@ def tipoDeCambio():
 
     # Recorrer la lista de líneas y agregar cada línea al array
     for linea in lineas:
-        listaConfAvanzada.append(linea.strip())  # strip() elimina los caracteres de nueva línea al final de cada línea
+        # strip() elimina los caracteres de nueva línea al final de cada línea
+        listaConfAvanzada.append(linea.strip())
 
     return listaConfAvanzada
